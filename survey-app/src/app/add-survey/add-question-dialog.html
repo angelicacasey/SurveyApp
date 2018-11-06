@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Add Custom question</h1>
+<div mat-dialog-content>
+  <p>Enter question:</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.question">
+  </mat-form-field>
+  <p>To enter options, enter option text and click the add button</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="option">
+  </mat-form-field>
+  <button mat-button (click)="addOption()">Add</button>
+</div>
+<div>
+<ol>
+  <li *ngFor="let option of data.options">
+  	{{option}}
+  	<button mat-button color="primary" (click)="deleteOption(option)">Delete</button>
+  </li>
+</ol>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+</div>

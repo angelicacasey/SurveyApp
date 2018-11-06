@@ -12,7 +12,7 @@ import { ReportsComponent } from './reports/reports.component';
 import { ClientListComponent } from './client-list/client-list.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
-import { AddSurveyComponent } from './add-survey/add-survey.component';
+import { AddSurveyComponent, AddQuestionDialog } from './add-survey/add-survey.component';
 import { ViewSurveyComponent } from './view-survey/view-survey.component';
 
 @NgModule({
@@ -25,6 +25,7 @@ import { ViewSurveyComponent } from './view-survey/view-survey.component';
     ProjectListComponent,
     EmployeeListComponent,
     AddSurveyComponent,
+    AddQuestionDialog,
     ViewSurveyComponent
   ],
   imports: [
@@ -32,8 +33,10 @@ import { ViewSurveyComponent } from './view-survey/view-survey.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     CustomMaterialModule,
+    FormsModule,
     ReactiveFormsModule
   ],
+  entryComponents: [AddQuestionDialog],
   providers: [],
   bootstrap: [AppComponent]
 })

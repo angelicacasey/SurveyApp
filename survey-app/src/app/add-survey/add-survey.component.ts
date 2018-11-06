@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Question } from "../models/question.model"
 
@@ -19,13 +19,13 @@ export class AddSurveyComponent implements OnInit {
   profileForm = new FormGroup(
   	{
   		id: new FormControl(''),
-  		surveyName: new FormControl(''),
-  		client: new FormControl(''),
-  		project: new FormControl({value: '', disabled: true}),
+  		surveyName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+  		client: new FormControl('', Validators.required),
+  		project: new FormControl({value: '', disabled: true}, Validators.required),
       recipientChoice: new FormControl({value: '', disabled: true}),
-  		recipientFirstName: new FormControl({value: '', disabled: true}),
-  		recipientLastName: new FormControl({value: '', disabled: true}),
-  		recipientEmail: new FormControl({value: '', disabled: true})
+  		recipientFirstName: new FormControl({value: '', disabled: true}, Validators.required),
+  		recipientLastName: new FormControl({value: '', disabled: true}, Validators.required),
+  		recipientEmail: new FormControl({value: '', disabled: true}, [Validators.required, Validators.email]
   	});
 
   displayedColumns: string[] = ["question", "options", "action"];
@@ -39,8 +39,9 @@ export class AddSurveyComponent implements OnInit {
   selectedProject;
   selectedEmployee = null;
   questionCounter:number = 1;
+  showNoQuestionError: boolean = false;
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.dataSource.data = this.questions;
@@ -92,6 +93,27 @@ export class AddSurveyComponent implements OnInit {
     });
   }
 
+  onSubmit(): void {
+    console.log("Submitting: ", this.profileForm.value);
+    if (this.questions.length == 0) {
+      this.showNoQuestionError = true;
+    }
+  }
+
+  getEmailError(): string {
+    var recipientEmail = this.profileForm.get('recipientEmail');
+    return recipientEmail.hasError('required') ? 'This field is required' :
+        recipientEmail.hasError('email') ? 'Please enter a valid email' :
+            '';
+  }
+
+  getSurveyNameError(): string {
+    var recipientEmail = this.profileForm.get('surveyName');
+    return recipientEmail.hasError('required') ? 'This field is required' :
+        recipientEmail.hasError('minlength') ? 'Please enter at least 3 characters' :
+            '';
+  }
+
   addMedAcuityQuestion(val): void {
     console.log("checkbox val: ", val);
     if (val) {
@@ -110,21 +132,41 @@ export class AddSurveyComponent implements OnInit {
       this.questions.splice(index, 1);
     }
     this.dataSource.data = this.questions;
+    this.showNoQuestionError = false;
 
   }
 
   addEmployeeQuestion(): void {
     var employee = this.employees.find(empl => empl.id === this.selectedEmployee);
-    var questionId = this.questionCounter++
-    var question = {
-      "id": ""+questionId,
-      "question": "Rate employee " + employee.value,
-      "options": "",
-      "employeeId": employee.id,
-      "questionType": "Employee_Rating"
-    };
-    this.questions.push(question);
-    this.dataSource.data = this.questions;
+    // check if there is a question for this employee
+    if (!this.haveQuestionForEmployee(employee.id)) {
+      var questionId = this.questionCounter++
+      var question = {
+        "id": ""+questionId,
+        "question": "Rate employee " + employee.value,
+        "options": "",
+        "employeeId": employee.id,
+        "questionType": "Employee_Rating"
+      };
+      this.questions.push(question);
+      this.dataSource.data = this.questions;
+    } else {
+      let snackBarRef = this.snackBar.open("Question already added!", "ok", {duration: 2000});
+    }
+    this.selectedEmployee = null;
+    this.showNoQuestionError = false;
+  }
+
+  haveQuestionForEmployee(employeeId): boolean {
+    var haveQuestion = false;
+    if (this.questions.length > 0) {
+      var employeeQuestion = this.questions.find(q => (q.questionType === "Employee_Rating" 
+                                              && q.employeeId === employeeId));
+      if(employeeQuestion) {
+        haveQuestion = true;
+      }
+    }
+    return haveQuestion;
   }
 
   deleteQuestion(question): void {
@@ -211,6 +253,7 @@ export class AddSurveyComponent implements OnInit {
         result.id = ""+this.questionCounter++;
         this.questions.push(result);
         this.dataSource.data = this.questions;
+        this.showNoQuestionError = false;
       }
     });
   }

@@ -4,12 +4,13 @@
 	<mat-card-title>Add Survey</mat-card-title>
 </mat-card-header>
 <mat-card-content>
-<form [formGroup]="profileForm" class="normal-form">
+<form [formGroup]="profileForm" class="normal-form" (ngSubmit)="onSubmit()">
   <div class="row">
     <div class="col-md-4">
         <input type="hidden" formControlName="id">
         <mat-form-field>
           <input formControlName="surveyName" matInput placeholder="Survey Name">
+          <mat-error>{{getSurveyNameError()}}</mat-error>
         </mat-form-field>
     </div>
     <div class="col-md-4">
@@ -19,6 +20,7 @@
               <mat-option value="{{client.id}}">{{client.value}}</mat-option>
             </ng-container>
           </mat-select>
+          <mat-error>This field is required.</mat-error>
         </mat-form-field>
     </div>
     <div class="col-md-4">
@@ -28,6 +30,7 @@
               <mat-option value="{{project.id}}">{{project.value}}</mat-option>
             </ng-container>
           </mat-select>
+          <mat-error>This field is required.</mat-error>
         </mat-form-field>
     </div>
   </div>
@@ -44,12 +47,15 @@
     <div class="col-md-8">
         <mat-form-field>
           <input formControlName="recipientFirstName" matInput placeholder="First Name">
+          <mat-error>This field is required.</mat-error>
         </mat-form-field>
         <mat-form-field>
           <input formControlName="recipientLastName" matInput placeholder="Last Name">
+          <mat-error>This field is required.</mat-error>
         </mat-form-field>
         <mat-form-field>
           <input formControlName="recipientEmail" matInput placeholder="Email">
+          <mat-error>{{getEmailError()}}</mat-error>
         </mat-form-field>
     </div>
   </div>
@@ -121,8 +127,9 @@
     </div>
   <div class="row align-items-end">
     <div class="col-md-12 align-self-end">
-        <button mat-raised-button color="primary" type="submit">Submit</button>
+        <button mat-raised-button color="primary" type="submit">Save</button>
         <button mat-raised-button color="warn">Clear</button>
+        <mat-error *ngIf="showNoQuestionError">You must enter at least one question.</mat-error>
     </div>
   </div>
 </form>

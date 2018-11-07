@@ -3,12 +3,10 @@
 	flex-direction: column;
 }
 
-.mat-cell:nth-child(3),
-.mat-header-cell:nth-child(3),
-{
-flex: 0 0 10%;
-}
-
 table {
   width: 100%;
+}
+
+.container {
+	margin: 10px;
 }

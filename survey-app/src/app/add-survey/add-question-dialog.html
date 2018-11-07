@@ -8,7 +8,7 @@
   <mat-form-field>
     <input matInput [(ngModel)]="option">
   </mat-form-field>
-  <button mat-button (click)="addOption()">Add</button>
+  <button mat-button (click)="addOption()" [disabled]="option.length === 0">Add</button>
 </div>
 <div>
 <ol>
@@ -19,6 +19,6 @@
 </ol>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial [disabled]="data.question.length === 0">Ok</button>
 </div>

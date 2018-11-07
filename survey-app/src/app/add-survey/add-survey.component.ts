@@ -25,7 +25,7 @@ export class AddSurveyComponent implements OnInit {
       recipientChoice: new FormControl({value: '', disabled: true}),
   		recipientFirstName: new FormControl({value: '', disabled: true}, Validators.required),
   		recipientLastName: new FormControl({value: '', disabled: true}, Validators.required),
-  		recipientEmail: new FormControl({value: '', disabled: true}, [Validators.required, Validators.email]
+  		recipientEmail: new FormControl({value: '', disabled: true}, [Validators.required, Validators.email])
   	});
 
   displayedColumns: string[] = ["question", "options", "action"];
@@ -266,7 +266,7 @@ export class AddSurveyComponent implements OnInit {
 })
 export class AddQuestionDialog {
 
-  option: string;
+  option: string = "";
 
   constructor(
     public dialogRef: MatDialogRef<AddQuestionDialog>,

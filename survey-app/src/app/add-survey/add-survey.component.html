@@ -1,19 +1,15 @@
-<section class="container">
-<mat-card>
-<mat-card-header>
-	<mat-card-title>Add Survey</mat-card-title>
-</mat-card-header>
-<mat-card-content>
+<div class="container">
 <form [formGroup]="profileForm" class="normal-form" (ngSubmit)="onSubmit()">
-  <div class="row">
-    <div class="col-md-4">
+  <h4>Add Survey</h4> 
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="30px">
+    <div fxFlex="33%">
         <input type="hidden" formControlName="id">
         <mat-form-field>
           <input formControlName="surveyName" matInput placeholder="Survey Name">
           <mat-error>{{getSurveyNameError()}}</mat-error>
         </mat-form-field>
     </div>
-    <div class="col-md-4">
+    <div fxFlex="33%">
         <mat-form-field>
           <mat-select formControlName="client" placeholder="Client">
             <ng-container *ngFor="let client of clients">
@@ -23,7 +19,7 @@
           <mat-error>This field is required.</mat-error>
         </mat-form-field>
     </div>
-    <div class="col-md-4">
+    <div fxFlex="33%">
         <mat-form-field>
           <mat-select formControlName="project" placeholder="Project">
             <ng-container *ngFor="let project of projects">
@@ -34,8 +30,8 @@
         </mat-form-field>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-4">
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="30px">
+    <div fxFlex="31%">
         <div class="add-bottom-padding">
           <mat-radio-group class="recipient-radio-group" formControlName="recipientChoice">
             <mat-radio-button value="1">Send to Project Contact</mat-radio-button>
@@ -44,59 +40,76 @@
         </div>    
     </div>
 
-    <div class="col-md-8">
-        <mat-form-field>
-          <input formControlName="recipientFirstName" matInput placeholder="First Name">
-          <mat-error>This field is required.</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <input formControlName="recipientLastName" matInput placeholder="Last Name">
-          <mat-error>This field is required.</mat-error>
-        </mat-form-field>
-        <mat-form-field>
-          <input formControlName="recipientEmail" matInput placeholder="Email">
-          <mat-error>{{getEmailError()}}</mat-error>
-        </mat-form-field>
+    <div>
+      <mat-form-field>
+        <input formControlName="recipientFirstName" matInput placeholder="First Name">
+        <mat-error>This field is required.</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input formControlName="recipientLastName" matInput placeholder="Last Name">
+        <mat-error>This field is required.</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input formControlName="recipientEmail" matInput placeholder="Email">
+        <mat-error>{{getEmailError()}}</mat-error>
+      </mat-form-field>
     </div>
   </div>
+
   <h4>Create questions</h4>
-  <div class="row">
-    <div class="col-md-12">
-    	To request feedback, select Employee:
-        <mat-form-field>
-          <mat-select [(value)]="selectedEmployee" placeholder="Employee" [disabled]="!isProjectSelected">
-            <ng-container *ngFor="let employee of employees">
-              <mat-option value="{{employee.id}}">{{employee.value}}</mat-option>
-            </ng-container>
-          </mat-select>
-        </mat-form-field>
-    	<button mat-raised-button color="primary" [disabled]="!selectedEmployee" (click)="addEmployeeQuestion()">Add</button>
+
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="30px">
+    <div fxFlexAlign="flex-end">
+   	  <h4 class="mat-h4">To request feedback on employees, select an Employee and click the Add button:</h4>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-select [(value)]="selectedEmployee" placeholder="Employee" [disabled]="!isProjectSelected">
+          <ng-container *ngFor="let employee of employees">
+            <mat-option value="{{employee.id}}">{{employee.value}}</mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" [disabled]="!selectedEmployee" (click)="addEmployeeQuestion()">Add</button>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-    	<div class="add-bottom-padding">
-          <mat-checkbox [disabled]="!isProjectSelected" (change)="addMedAcuityQuestion($event.checked)">Get feedback on MedAcuity</mat-checkbox>
-        </div>
+
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="30px">
+    <div fxFlexAlign="flex-end">
+   	  <h4 class="mat-h4">To request feedback for MedAcuity, select checkbox:</h4>
+    </div>
+    <div>
+        <mat-checkbox [disabled]="!isProjectSelected" (change)="addMedAcuityQuestion($event.checked)">Get MedAcuity feedback</mat-checkbox>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-    	Click to add custom questions: 
-    	<button mat-raised-button color="primary" [disabled]="!isProjectSelected" (click)="openDialog()">Add</button>
+
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="30px">
+    <div fxFlexAlign="flex-end">
+   	  <h4 class="mat-h4">To create Custom questions, click the Add button:</h4>
+    </div>    
+    <div>
+      <button mat-raised-button color="primary" [disabled]="!isProjectSelected" (click)="openDialog()">Add</button>
     </div>
   </div>
+
   <h4>Survey Questions</h4>
-  <div class="row" *ngIf="questions.length > 0">
-    <div class="col-md-12">
+  <div class="container" fxLayout="row" fxLayout.xs="column" *ngIf="questions.length > 0" >
+    <div fxFlex="75%">
 	  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-	    <!-- Name Column -->
+	    
+	    <!-- Question Column -->
 	    <ng-container matColumnDef="question">
 	      <th mat-header-cell *matHeaderCellDef> Question </th>
 	      <td mat-cell *matCellDef="let element"> {{element.question}} </td>
 	    </ng-container>
 
-	    <!-- Status Column -->
+	    <!-- Options Column -->
 	    <ng-container matColumnDef="options">
 	      <th mat-header-cell *matHeaderCellDef> Options </th>
 	      <td mat-cell *matCellDef="let element"> 
@@ -108,7 +121,7 @@
 	      </td>
 	    </ng-container>
 
-    	  <!-- Action Column -->
+    	<!-- Action Column -->
 	    <ng-container matColumnDef="action">
 	      <th mat-header-cell *matHeaderCellDef> Action </th>
 	      <td mat-cell *matCellDef="let element"> 
@@ -120,21 +133,20 @@
 	    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 	    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 	  </table>
-     </div>
-    </div>
-    <div class="row" *ngIf="questions.length == 0">
-    	<h5>No Questions Added.</h5>
-    </div>
-  <div class="row align-items-end">
-    <div class="col-md-12 align-self-end">
-        <button mat-raised-button color="primary" type="submit">Save</button>
-        <button mat-raised-button color="warn">Clear</button>
-        <mat-error *ngIf="showNoQuestionError">You must enter at least one question.</mat-error>
     </div>
   </div>
+  <div class="container" fxLayout="row" fxLayout.xs="column">
+    <div *ngIf="questions.length == 0">
+   	  <h5>No Questions Added.</h5>
+    </div>
+  </div>
+
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="20px">
+    <button mat-raised-button color="primary" type="submit">Save</button>
+    <button mat-raised-button color="warn">Clear</button>
+    <mat-error *ngIf="showNoQuestionError">You must enter at least one question.</mat-error>
+  </div>
+
 </form>
+</div>
 
-
-</mat-card-content>
-</mat-card>
-</section>

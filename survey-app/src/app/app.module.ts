@@ -1,11 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CustomMaterialModule} from "./material.module"
-
-import { AppRoutingModule } from './app-routing.module'; 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+import { CustomMaterialModule} from "./material.module"
+import { AppRoutingModule } from './app-routing.module'; 
 import { SurveyListComponent } from './survey-list/survey-list.component';
 import { MainNavigationComponent } from './main-navigation/main-navigation.component';
 import { ReportsComponent } from './reports/reports.component';
@@ -34,7 +35,8 @@ import { ViewSurveyComponent } from './view-survey/view-survey.component';
     BrowserAnimationsModule,
     CustomMaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FlexLayoutModule
   ],
   entryComponents: [AddQuestionDialog],
   providers: [],

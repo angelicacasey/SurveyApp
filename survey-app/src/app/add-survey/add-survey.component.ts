@@ -4,11 +4,6 @@ import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Question } from "../models/question.model"
 
-export interface DialogData {
-  animal: string;
-  name: string;
-}
-
 @Component({
   selector: 'app-add-survey',
   templateUrl: './add-survey.component.html',
@@ -16,17 +11,18 @@ export interface DialogData {
 })
 export class AddSurveyComponent implements OnInit {
 
-  profileForm = new FormGroup(
-  	{
-  		id: new FormControl(''),
-  		surveyName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-  		client: new FormControl('', Validators.required),
-  		project: new FormControl({value: '', disabled: true}, Validators.required),
-      recipientChoice: new FormControl({value: '', disabled: true}),
-  		recipientFirstName: new FormControl({value: '', disabled: true}, Validators.required),
-  		recipientLastName: new FormControl({value: '', disabled: true}, Validators.required),
-  		recipientEmail: new FormControl({value: '', disabled: true}, [Validators.required, Validators.email])
-  	});
+  surveyForm = new FormGroup(
+  {
+  	id: new FormControl(''),
+  	surveyName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+  	client: new FormControl('', Validators.required),
+  	project: new FormControl({value: '', disabled: true}, Validators.required),
+    recipientChoice: new FormControl({value: '', disabled: true}),
+  	recipientFirstName: new FormControl({value: '', disabled: true}, Validators.required),
+  	recipientLastName: new FormControl({value: '', disabled: true}, Validators.required),
+  	recipientEmail: new FormControl({value: '', disabled: true}, [Validators.required, Validators.email]),
+    requestFeedback: new FormControl({value: false, disabled: true})
+  });
 
   displayedColumns: string[] = ["question", "options", "action"];
   dataSource = new MatTableDataSource();
@@ -36,7 +32,7 @@ export class AddSurveyComponent implements OnInit {
   employees = [];
   isClientSelected = false;
   isProjectSelected = false;
-  selectedProject;
+  selectedProject = null;
   selectedEmployee = null;
   questionCounter:number = 1;
   showNoQuestionError: boolean = false;
@@ -51,71 +47,63 @@ export class AddSurveyComponent implements OnInit {
   }
 
   onChanges(): void {
-    this.profileForm.get('client').valueChanges.subscribe(val => {
-      console.log("client changed, val=", val);
-      this.isClientSelected = true;
-      this.profileForm.get('project').enable();
-      this.projects = this.getProjects(val);
-    });
+    this.surveyForm.get('client').valueChanges
+      .subscribe(val => this.clientChanged(val));
 
-    this.profileForm.get('project').valueChanges.subscribe(val => {
-      console.log("project changed, val=", val);
-      if (val) {
-        var projectData = this.projects.find(proj => proj.id == val);
-        console.log(projectData);
-        this.selectedProject = projectData;
-        this.profileForm.get('recipientChoice').enable();
+    this.surveyForm.get('project').valueChanges
+      .subscribe(val => this.projectChanged(val));
 
-        this.profileForm.get('recipientChoice').setValue("1");     
+    this.surveyForm.get('recipientChoice').valueChanges
+      .subscribe(val => this.recipientChoiceChanged(val));
 
-        this.employees = this.getEmployees(val);
-        this.isProjectSelected = true;
-      }
-    });
-
-    this.profileForm.get('recipientChoice').valueChanges.subscribe(val => {
-      console.log("recipient choice changed, val=", val);
-      if (val === '1') {
-        this.profileForm.get('recipientFirstName').setValue(this.selectedProject.contactFirstName);  
-        this.profileForm.get('recipientLastName').setValue(this.selectedProject.contactLastName);
-        this.profileForm.get('recipientEmail').setValue(this.selectedProject.contactEmail); 
-        this.profileForm.get('recipientFirstName').disable();
-        this.profileForm.get('recipientLastName').disable();
-        this.profileForm.get('recipientEmail').disable();
-      } else {
-        this.profileForm.get('recipientFirstName').setValue("");  
-        this.profileForm.get('recipientLastName').setValue("");
-        this.profileForm.get('recipientEmail').setValue(""); 
-        this.profileForm.get('recipientFirstName').enable();
-        this.profileForm.get('recipientLastName').enable();
-        this.profileForm.get('recipientEmail').enable();
-      }
-    });
+    this.surveyForm.get('requestFeedback').valueChanges
+      .subscribe(val => this.requestFeedbackChanged(val));
   }
 
-  onSubmit(): void {
-    console.log("Submitting: ", this.profileForm.value);
-    if (this.questions.length == 0) {
-      this.showNoQuestionError = true;
+  clientChanged(val): void {
+    console.log("client changed, val=", val);
+    this.isClientSelected = true;
+    this.surveyForm.get('project').enable();
+    this.projects = this.getProjects(val);
+  }
+
+  projectChanged(val): void {
+    console.log("project changed, val=", val);
+    if (val) {
+      var projectData = this.projects.find(proj => proj.id == val);
+      console.log(projectData);
+      this.selectedProject = projectData;
+      this.surveyForm.get('recipientChoice').enable();
+      this.surveyForm.get('requestFeedback').enable();    
+
+      this.surveyForm.get('recipientChoice').setValue("1"); 
+
+      this.employees = this.getEmployees(val);
+      this.isProjectSelected = true;
     }
   }
 
-  getEmailError(): string {
-    var recipientEmail = this.profileForm.get('recipientEmail');
-    return recipientEmail.hasError('required') ? 'This field is required' :
-        recipientEmail.hasError('email') ? 'Please enter a valid email' :
-            '';
+  recipientChoiceChanged(val): void {
+    console.log("recipient choice changed, val=", val);
+    if (val === '1') {
+      this.surveyForm.get('recipientFirstName').setValue(this.selectedProject.contactFirstName);  
+      this.surveyForm.get('recipientLastName').setValue(this.selectedProject.contactLastName);
+      this.surveyForm.get('recipientEmail').setValue(this.selectedProject.contactEmail); 
+      this.surveyForm.get('recipientFirstName').disable();
+      this.surveyForm.get('recipientLastName').disable();
+      this.surveyForm.get('recipientEmail').disable();
+    } else {
+      this.surveyForm.get('recipientFirstName').setValue("");  
+      this.surveyForm.get('recipientLastName').setValue("");
+      this.surveyForm.get('recipientEmail').setValue(""); 
+      this.surveyForm.get('recipientFirstName').enable();
+      this.surveyForm.get('recipientLastName').enable();
+      this.surveyForm.get('recipientEmail').enable();
+    }
   }
 
-  getSurveyNameError(): string {
-    var recipientEmail = this.profileForm.get('surveyName');
-    return recipientEmail.hasError('required') ? 'This field is required' :
-        recipientEmail.hasError('minlength') ? 'Please enter at least 3 characters' :
-            '';
-  }
-
-  addMedAcuityQuestion(val): void {
-    console.log("checkbox val: ", val);
+  requestFeedbackChanged(val): void {
+    console.log("requestFeedback changed, val=", val);
     if (val) {
       var questionId = this.questionCounter++
       // add question
@@ -133,7 +121,60 @@ export class AddSurveyComponent implements OnInit {
     }
     this.dataSource.data = this.questions;
     this.showNoQuestionError = false;
+  }
 
+  onSubmit(): void {
+    console.log("Submitting: ", this.surveyForm.value);
+    if (this.questions.length == 0) {
+      this.showNoQuestionError = true;
+    }
+  }
+
+  onClear(): void {
+
+    let id = this.surveyForm.get('id'); // this will be used when doing editing
+    this.surveyForm.reset();
+    this.initializeFormGroup();
+    this.surveyForm.patchValue({id});
+
+    this.questions = [];
+  }
+
+  initializeFormGroup(): void {
+
+    this.surveyForm.setValue({
+      id: '',
+      surveyName: '',
+      client: '',
+      project: '',
+      recipientChoice: '',
+      recipientFirstName: '',
+      recipientLastName: '',
+      recipientEmail: '',
+      requestFeedback: false
+    });
+
+    this.surveyForm.get('project').disable();
+    this.surveyForm.get('recipientChoice').disable();
+    this.surveyForm.get('recipientFirstName').disable();
+    this.surveyForm.get('recipientLastName').disable();
+    this.surveyForm.get('recipientEmail').disable();
+    this.surveyForm.get('requestFeedback').disable();    
+
+  }
+
+  getEmailError(): string {
+    var recipientEmail = this.surveyForm.get('recipientEmail');
+    return recipientEmail.hasError('required') ? 'This field is required' :
+        recipientEmail.hasError('email') ? 'Please enter a valid email' :
+            '';
+  }
+
+  getSurveyNameError(): string {
+    var recipientEmail = this.surveyForm.get('surveyName');
+    return recipientEmail.hasError('required') ? 'This field is required' :
+        recipientEmail.hasError('minlength') ? 'Please enter at least 3 characters' :
+            '';
   }
 
   addEmployeeQuestion(): void {
@@ -171,8 +212,12 @@ export class AddSurveyComponent implements OnInit {
 
   deleteQuestion(question): void {
     let index = this.questions.findIndex(ques => ques.id === question.id);
-    this.questions.splice(index, 1);
-    this.dataSource.data = this.questions;
+    if (this.questions[index].questionType === "Medacuity_Rating") {
+      this.surveyForm.get('requestFeedback').setValue(false);
+    } else {
+      this.questions.splice(index, 1);
+      this.dataSource.data = this.questions;
+    }
   }
 
   editQuestion(question): void {
@@ -241,7 +286,7 @@ export class AddSurveyComponent implements OnInit {
     return employees;
   }
 
-  openDialog(): void {
+  addCustomQuestion(): void {
     const dialogRef = this.dialog.open(AddQuestionDialog, {
       width: '500px',
       data: {question: "", questionType: "Custom", options: []}

@@ -1,5 +1,5 @@
 <div class="container">
-<form [formGroup]="profileForm" class="normal-form" (ngSubmit)="onSubmit()">
+<form [formGroup]="surveyForm" class="normal-form"> <!-- (ngSubmit)="onSubmit()"> -->
   <h4>Add Survey</h4> 
   <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="30px">
     <div fxFlex="33%">
@@ -85,7 +85,7 @@
    	  <h4 class="mat-h4">To request feedback for MedAcuity, select checkbox:</h4>
     </div>
     <div>
-        <mat-checkbox [disabled]="!isProjectSelected" (change)="addMedAcuityQuestion($event.checked)">Get MedAcuity feedback</mat-checkbox>
+        <mat-checkbox formControlName="requestFeedback">Get MedAcuity feedback</mat-checkbox>
     </div>
   </div>
 
@@ -94,7 +94,7 @@
    	  <h4 class="mat-h4">To create Custom questions, click the Add button:</h4>
     </div>    
     <div>
-      <button mat-raised-button color="primary" [disabled]="!isProjectSelected" (click)="openDialog()">Add</button>
+      <button mat-raised-button color="primary" [disabled]="!isProjectSelected" (click)="addCustomQuestion()">Add</button>
     </div>
   </div>
 
@@ -142,8 +142,8 @@
   </div>
 
   <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="20px">
-    <button mat-raised-button color="primary" type="submit">Save</button>
-    <button mat-raised-button color="warn">Clear</button>
+    <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">Save</button>
+    <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
     <mat-error *ngIf="showNoQuestionError">You must enter at least one question.</mat-error>
   </div>
 

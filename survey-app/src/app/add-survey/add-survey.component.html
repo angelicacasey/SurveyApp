@@ -13,7 +13,7 @@
         <mat-form-field>
           <mat-select formControlName="client" placeholder="Client">
             <ng-container *ngFor="let client of clients">
-              <mat-option value="{{client.id}}">{{client.value}}</mat-option>
+              <mat-option value="{{client.id}}">{{client.itemName}}</mat-option>
             </ng-container>
           </mat-select>
           <mat-error>This field is required.</mat-error>
@@ -23,7 +23,7 @@
         <mat-form-field>
           <mat-select formControlName="project" placeholder="Project">
             <ng-container *ngFor="let project of projects">
-              <mat-option value="{{project.id}}">{{project.value}}</mat-option>
+              <mat-option value="{{project.id}}">{{project.itemName}}</mat-option>
             </ng-container>
           </mat-select>
           <mat-error>This field is required.</mat-error>
@@ -70,7 +70,7 @@
       <mat-form-field>
         <mat-select [(value)]="selectedEmployee" placeholder="Employee" [disabled]="!isProjectSelected">
           <ng-container *ngFor="let employee of employees">
-            <mat-option value="{{employee.id}}">{{employee.value}}</mat-option>
+            <mat-option value="{{employee.id}}">{{employee.itemName}}</mat-option>
           </ng-container>
         </mat-select>
       </mat-form-field>
@@ -125,8 +125,10 @@
 	    <ng-container matColumnDef="action">
 	      <th mat-header-cell *matHeaderCellDef> Action </th>
 	      <td mat-cell *matCellDef="let element"> 
-	          <a mat-button color="primary" *ngIf="element.questionType == 'Custom'" (click)="editQuestion(element)">Edit</a>
-	    	  <a mat-button color="primary" (click)="deleteQuestion(element)">Delete</a>
+	        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+	          <a mat-raised-button *ngIf="element.questionType == 'Custom'" (click)="editQuestion(element)">Edit</a>
+	    	  <a mat-raised-button (click)="deleteQuestion(element)">Delete</a>
+	    	</div>
 	      </td>
 	    </ng-container>
 
@@ -144,6 +146,7 @@
   <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="20px">
     <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">Save</button>
     <button mat-raised-button color="warn" (click)="onClear()">Clear</button>
+    <button mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
     <mat-error *ngIf="showNoQuestionError">You must enter at least one question.</mat-error>
   </div>
 

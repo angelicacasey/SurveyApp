@@ -2,7 +2,10 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import {Router} from "@angular/router";
+
 import { Question } from "../models/question.model"
+import { SurveyService } from "../shared/survey-service.service"
 
 @Component({
   selector: 'app-add-survey',
@@ -37,11 +40,14 @@ export class AddSurveyComponent implements OnInit {
   questionCounter:number = 1;
   showNoQuestionError: boolean = false;
 
-  constructor(public dialog: MatDialog, public snackBar: MatSnackBar) { }
+  constructor(public dialog: MatDialog, 
+              public snackBar: MatSnackBar,
+              public surveyService: SurveyService,
+              private router: Router) { }
 
   ngOnInit() {
     this.dataSource.data = this.questions;
-    this.clients = this.getListOfClients();
+    this.getListOfClients();
 
     this.onChanges();
   }
@@ -64,7 +70,7 @@ export class AddSurveyComponent implements OnInit {
     console.log("client changed, val=", val);
     this.isClientSelected = true;
     this.surveyForm.get('project').enable();
-    this.projects = this.getProjects(val);
+    this.getProjects(val);
   }
 
   projectChanged(val): void {
@@ -78,7 +84,7 @@ export class AddSurveyComponent implements OnInit {
 
       this.surveyForm.get('recipientChoice').setValue("1"); 
 
-      this.employees = this.getEmployees(val);
+      this.getEmployees(val);
       this.isProjectSelected = true;
     }
   }
@@ -138,6 +144,10 @@ export class AddSurveyComponent implements OnInit {
     this.surveyForm.patchValue({id});
 
     this.questions = [];
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/surveys']);
   }
 
   initializeFormGroup(): void {
@@ -237,53 +247,25 @@ export class AddSurveyComponent implements OnInit {
     });
   }
 
-  getListOfClients() {
+  getListOfClients(): void {
 
-    var clients = [
-      {
-        "id": "client1",
-        "value": "Super Client"
-      },
-      {
-        "id": "client2",
-        "value": "Uber Client"
-      }
-    ];
-    return clients;
+    this.surveyService.getListOfClients().subscribe(result => {
+      this.clients = result;
+    });
   }
 
-  getProjects(val) {
-    var projects = [
-      {
-        "id": "project1",
-        "value": "ABC",
-        "contactFirstName": "Elmer",
-        "contactLastName": "Fudd",
-        "contactEmail": "efudd@meddevlmtd.com"
-      },
-      {
-        "id": "project2",
-        "value": "DEF",
-        "contactFirstName": "Sherlock",
-        "contactLastName": "Holmes",
-        "contactEmail": "sholmes@meddevlmtd.com"
-      }
-    ];
-    return projects
+  getProjects(clientId): void {
+    this.surveyService.getListOfProjectsForClient(clientId)
+      .subscribe(result => {
+        this.projects = result;
+      });
   }
 
-  getEmployees(val) {
-    var employees = [
-      {
-        "id": "emp1",
-        "value": "Harry Potter",
-      },
-      {
-        "id": "emp2",
-        "value": "Hermoine Granger",
-      }
-    ];
-    return employees;
+  getEmployees(projectId): void {
+    this.surveyService.getListOfEmployeesOnProject(projectId)
+      .subscribe(result => {
+        this.employees = result;
+      });
   }
 
   addCustomQuestion(): void {

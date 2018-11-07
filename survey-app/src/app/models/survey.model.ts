@@ -3,7 +3,7 @@ export class Survey {
 	itemName: string;
 	projectName: string;
 	clientName: string;
-	projectManager: string;
+	createdBy: string;
 	recipient: string;
 	status: string;
 	createdDt: string;

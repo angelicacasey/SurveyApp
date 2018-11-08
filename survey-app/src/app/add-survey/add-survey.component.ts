@@ -4,8 +4,10 @@ import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import {Router} from "@angular/router";
 
-import { Question } from "../models/question.model"
-import { SurveyService } from "../shared/survey-service.service"
+import { Survey } from "../models/survey.model";
+import { Question } from "../models/question.model";
+import { Person } from "../models/person.model";
+import { SurveyService } from "../shared/survey-service.service";
 
 @Component({
   selector: 'app-add-survey',
@@ -39,6 +41,7 @@ export class AddSurveyComponent implements OnInit {
   selectedEmployee = null;
   questionCounter:number = 1;
   showNoQuestionError: boolean = false;
+  survey: Survey;
 
   constructor(public dialog: MatDialog, 
               public snackBar: MatSnackBar,
@@ -92,9 +95,9 @@ export class AddSurveyComponent implements OnInit {
   recipientChoiceChanged(val): void {
     console.log("recipient choice changed, val=", val);
     if (val === '1') {
-      this.surveyForm.get('recipientFirstName').setValue(this.selectedProject.contactFirstName);  
-      this.surveyForm.get('recipientLastName').setValue(this.selectedProject.contactLastName);
-      this.surveyForm.get('recipientEmail').setValue(this.selectedProject.contactEmail); 
+      this.surveyForm.get('recipientFirstName').setValue(this.selectedProject.contact.firstName);  
+      this.surveyForm.get('recipientLastName').setValue(this.selectedProject.contact.lastName);
+      this.surveyForm.get('recipientEmail').setValue(this.selectedProject.contact.email); 
       this.surveyForm.get('recipientFirstName').disable();
       this.surveyForm.get('recipientLastName').disable();
       this.surveyForm.get('recipientEmail').disable();
@@ -133,6 +136,37 @@ export class AddSurveyComponent implements OnInit {
     console.log("Submitting: ", this.surveyForm.value);
     if (this.questions.length == 0) {
       this.showNoQuestionError = true;
+    } else {
+      //create a survey object
+      if (!this.survey) {
+        // create new survey
+        this.survey = new Survey();
+      }
+      this.survey.itemName = this.surveyForm.value.surveyName;
+      this.survey.projectId = this.surveyForm.value.project;
+      var project = this.projects.find(p => p.id === this.survey.projectId);
+      this.survey.projectName = project.itemName;
+      this.survey.clientId = this.surveyForm.value.client;
+      var client = this.clients.find(c => c.id === this.survey.clientId);
+      this.survey.clientName = client.itemName;
+      this.survey.createdBy = new Person();
+      this.survey.createdBy.firstName = "Harry";
+      this.survey.createdBy.lastName = "Potter";
+      this.survey.createdBy.email = "hpotter@medacuitysoftware.com";
+      this.survey.recipient = new Person();
+      if (this.surveyForm.value.recipientChoice == "1") {
+        this.survey.recipient.firstName = this.selectedProject.contact.firstName;
+        this.survey.recipient.lastName = this.selectedProject.contact.lastName;
+        this.survey.recipient.email = this.selectedProject.contact.email;
+      } else {
+        this.survey.recipient.firstName = this.surveyForm.value.recipientFirstName;
+        this.survey.recipient.lastName = this.surveyForm.value.recipientLastName;
+        this.survey.recipient.email = this.surveyForm.value.recipientEmail;
+      }
+      this.survey.status = "Saved";
+      // save questions
+      console.log("New survey:", this.survey);
+      this.surveyService.saveSurvey(this.survey);
     }
   }
 

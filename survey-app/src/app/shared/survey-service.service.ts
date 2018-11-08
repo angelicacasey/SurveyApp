@@ -213,7 +213,8 @@ export class SurveyService {
   		survey.createdDt = new Date().toISOString();
   		this.currentSurveys.push(survey);
   	} else {
-  		var index = this.currentSurveys.indexOf(s => s.id === survey.id);
+  		var surveyId = survey.id;
+  		var index = this.currentSurveys.findIndex(s => s.id === survey.id);
   		this.currentSurveys[index] = survey;
   	}
 

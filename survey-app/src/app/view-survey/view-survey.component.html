@@ -1,5 +1,7 @@
-<p>
-  view-survey works!
-</p>
+<div class="container">
 
-<button (click)="goBack()">Return</button>
+  <h4 class="mat-h4">Project: <b>{{survey.projectName}} </b> Client: <b>{{survey.clientName}}</b></h4>
+  <h4 class="mat-h4">The following survey will be sent to <b>{{survey.recipient.firstName}} {{survey.recipient.lastName}}</b></h4>
+  
+  <button (click)="goBack()">Return</button>
+</div>

@@ -1,6 +1,6 @@
 <div class="container">
 <form [formGroup]="surveyForm" class="normal-form"> <!-- (ngSubmit)="onSubmit()"> -->
-  <h4>Add Survey</h4> 
+  <h4>{{title}}</h4> 
   <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="30px">
     <div fxFlex="33%">
         <input type="hidden" formControlName="id">
@@ -9,7 +9,7 @@
           <mat-error>{{getSurveyNameError()}}</mat-error>
         </mat-form-field>
     </div>
-    <div fxFlex="33%">
+    <div *ngIf=!inEditMode fxFlex="33%">
         <mat-form-field>
           <mat-select formControlName="client" placeholder="Client">
             <ng-container *ngFor="let client of clients">
@@ -19,7 +19,12 @@
           <mat-error>This field is required.</mat-error>
         </mat-form-field>
     </div>
-    <div fxFlex="33%">
+    <div *ngIf=inEditMode fxFlex="33%">
+        <mat-form-field>
+          <input matInput placeholder="Client" [disabled]=true value={{survey.clientName}}>
+        </mat-form-field>
+    </div>
+    <div *ngIf=!inEditMode fxFlex="33%">
         <mat-form-field>
           <mat-select formControlName="project" placeholder="Project">
             <ng-container *ngFor="let project of projects">
@@ -27,6 +32,11 @@
             </ng-container>
           </mat-select>
           <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+    </div>
+    <div *ngIf=inEditMode fxFlex="33%">
+        <mat-form-field>
+          <input matInput placeholder="Project" [disabled]=true value={{survey.projectName}}>
         </mat-form-field>
     </div>
   </div>

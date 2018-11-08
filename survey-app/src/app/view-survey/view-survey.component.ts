@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
+import { Survey } from '../models/survey.model';
+import { SurveyService } from '../shared/survey-service.service';
+
 @Component({
   selector: 'app-view-survey',
   templateUrl: './view-survey.component.html',
@@ -9,9 +12,12 @@ import { Location } from '@angular/common';
 })
 export class ViewSurveyComponent implements OnInit {
 
+  survey: Survey;
+
   constructor(
   	private route: ActivatedRoute,
-  	private location: Location) { }
+  	private location: Location,
+    private surveyService: SurveyService) { }
 
   ngOnInit() {
   	this.getSurvey();
@@ -20,6 +26,9 @@ export class ViewSurveyComponent implements OnInit {
   getSurvey(): void {
   	const id = this.route.snapshot.paramMap.get('id');
   	console.log("Get survey for id: ", id);
+    this.surveyService.getSurvey(id).subscribe(result => {
+      this.survey = result;
+    });
   }
 
   goBack(): void {

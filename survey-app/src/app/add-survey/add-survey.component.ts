@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import {Router} from "@angular/router";
+import { Router, ActivatedRoute} from "@angular/router";
 
 import { Survey } from "../models/survey.model";
 import { Question } from "../models/question.model";
@@ -42,15 +42,30 @@ export class AddSurveyComponent implements OnInit {
   questionCounter:number = 1;
   showNoQuestionError: boolean = false;
   survey: Survey;
+  inEditMode: boolean = false;
+  title: string;
 
   constructor(public dialog: MatDialog, 
               public snackBar: MatSnackBar,
               public surveyService: SurveyService,
-              private router: Router) { }
+              private router: Router,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.dataSource.data = this.questions;
-    this.getListOfClients();
+
+    // check if in editing or adding
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      console.log("Editing survey for id: ", id);
+      this.title = "Edit Survey"
+      this.inEditMode = true;
+      this.getSurveyToEdit(id);
+    } else {
+      console.log("Adding survey");
+      this.title = "Add Survey"
+      this.getListOfClients();
+    }
 
     this.onChanges();
   }
@@ -116,12 +131,10 @@ export class AddSurveyComponent implements OnInit {
     if (val) {
       var questionId = this.questionCounter++
       // add question
-      var question = {
-        "id": ""+questionId,
-        "question": "Rate MedAcuity",
-        "options": "",
-        "questionType": "Medacuity_Rating"
-      };
+      var question = new Question();
+      question.id = ""+questionId;
+      question.question = "Please provide a rating of how MedAcuity is doing overall.";
+      question.questionType = "Medacuity_Rating";
       this.questions.push(question);
     } else {
       // remove question
@@ -130,6 +143,51 @@ export class AddSurveyComponent implements OnInit {
     }
     this.dataSource.data = this.questions;
     this.showNoQuestionError = false;
+  }
+
+  getSurveyToEdit(surveyId): void {
+    this.surveyService.getSurvey(surveyId).subscribe(result => {
+      //set the form fields
+      this.survey = result;
+      this.surveyForm.get('surveyName').setValue(this.survey.itemName);
+
+      // get the project data (for contact information)
+      this.getProject(this.survey.projectId);
+
+    });
+  }
+
+  getProject(projectId): void {
+
+    this.surveyService.getProject(projectId).subscribe(result => {
+      this.selectedProject = result
+
+      var recipientChoice = (this.survey.recipient.email === this.selectedProject.contact.email) ? "1" : "2";
+      this.surveyForm.get('recipientChoice').setValue(recipientChoice);
+
+      this.surveyForm.get('recipientFirstName').setValue(this.survey.recipient.firstName);
+      this.surveyForm.get('recipientLastName').setValue(this.survey.recipient.lastName);
+      this.surveyForm.get('recipientEmail').setValue(this.survey.recipient.email);
+
+      // enable appropriate fields
+      this.surveyForm.get('recipientChoice').enable();
+      this.surveyForm.get('requestFeedback').enable();    
+      this.surveyForm.get('recipientFirstName').enable();
+      this.surveyForm.get('recipientLastName').enable();
+      this.surveyForm.get('recipientEmail').enable();
+
+      this.isProjectSelected = true;
+
+      this.questions = this.survey.questions;
+      this.dataSource.data = this.questions;
+      var haveMedAcuityQuestion = this.questions.find(q => q.questionType === "Medacuity_Rating");
+      if (haveMedAcuityQuestion) {
+        this.surveyForm.get('requestFeedback').setValue(true);
+      }
+
+      this.getEmployees(this.selectedProject.id);
+
+    });
   }
 
   onSubmit(): void {
@@ -143,30 +201,31 @@ export class AddSurveyComponent implements OnInit {
         this.survey = new Survey();
       }
       this.survey.itemName = this.surveyForm.value.surveyName;
-      this.survey.projectId = this.surveyForm.value.project;
       var project = this.projects.find(p => p.id === this.survey.projectId);
-      this.survey.projectName = project.itemName;
-      this.survey.clientId = this.surveyForm.value.client;
-      var client = this.clients.find(c => c.id === this.survey.clientId);
-      this.survey.clientName = client.itemName;
-      this.survey.createdBy = new Person();
-      this.survey.createdBy.firstName = "Harry";
-      this.survey.createdBy.lastName = "Potter";
-      this.survey.createdBy.email = "hpotter@medacuitysoftware.com";
-      this.survey.recipient = new Person();
+
+      if (!this.inEditMode) {
+        this.survey.projectId = this.surveyForm.value.project;
+        this.survey.projectName = project.itemName;
+        this.survey.clientId = this.surveyForm.value.client;
+        var client = this.clients.find(c => c.id === this.survey.clientId);
+        this.survey.clientName = client.itemName;
+        this.survey.createdBy = this.selectedProject.programManager;
+      }
+
       if (this.surveyForm.value.recipientChoice == "1") {
-        this.survey.recipient.firstName = this.selectedProject.contact.firstName;
-        this.survey.recipient.lastName = this.selectedProject.contact.lastName;
-        this.survey.recipient.email = this.selectedProject.contact.email;
+        this.survey.recipient = this.selectedProject.contact;
       } else {
+        this.survey.recipient = new Person();
         this.survey.recipient.firstName = this.surveyForm.value.recipientFirstName;
         this.survey.recipient.lastName = this.surveyForm.value.recipientLastName;
         this.survey.recipient.email = this.surveyForm.value.recipientEmail;
       }
-      this.survey.status = "Saved";
+      this.survey.status = "Draft";
       // save questions
+      this.survey.questions = this.questions;
       console.log("New survey:", this.survey);
-      this.surveyService.saveSurvey(this.survey);
+      var savedSurvey = this.surveyService.saveSurvey(this.survey);
+      this.router.navigate(['/surveys/preview/'+ savedSurvey.id])
     }
   }
 
@@ -226,13 +285,11 @@ export class AddSurveyComponent implements OnInit {
     // check if there is a question for this employee
     if (!this.haveQuestionForEmployee(employee.id)) {
       var questionId = this.questionCounter++
-      var question = {
-        "id": ""+questionId,
-        "question": "Rate employee " + employee.value,
-        "options": "",
-        "employeeId": employee.id,
-        "questionType": "Employee_Rating"
-      };
+      var question = new Question();
+      question.id = ""+questionId;
+      question.question = "Please provide a performance rating for " + employee.itemName + ".";
+      question.employeeId = employee.id;
+      question.questionType = "Employee_Rating";
       this.questions.push(question);
       this.dataSource.data = this.questions;
     } else {
@@ -252,6 +309,23 @@ export class AddSurveyComponent implements OnInit {
       }
     }
     return haveQuestion;
+  }
+
+  addCustomQuestion(): void {
+    const dialogRef = this.dialog.open(AddQuestionDialog, {
+      width: '500px',
+      data: {question: "", questionType: "Custom", options: []}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed ', result);
+      if (result) {
+        result.id = ""+this.questionCounter++;
+        this.questions.push(result);
+        this.dataSource.data = this.questions;
+        this.showNoQuestionError = false;
+      }
+    });
   }
 
   deleteQuestion(question): void {
@@ -302,22 +376,6 @@ export class AddSurveyComponent implements OnInit {
       });
   }
 
-  addCustomQuestion(): void {
-    const dialogRef = this.dialog.open(AddQuestionDialog, {
-      width: '500px',
-      data: {question: "", questionType: "Custom", options: []}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed ', result);
-      if (result) {
-        result.id = ""+this.questionCounter++;
-        this.questions.push(result);
-        this.dataSource.data = this.questions;
-        this.showNoQuestionError = false;
-      }
-    });
-  }
 
 }
 

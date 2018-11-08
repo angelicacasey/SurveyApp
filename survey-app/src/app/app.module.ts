@@ -15,6 +15,7 @@ import { ProjectListComponent } from './project-list/project-list.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { AddSurveyComponent, AddQuestionDialog } from './add-survey/add-survey.component';
 import { ViewSurveyComponent } from './view-survey/view-survey.component';
+import { PreviewSurveyComponent } from './preview-survey/preview-survey.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ViewSurveyComponent } from './view-survey/view-survey.component';
     EmployeeListComponent,
     AddSurveyComponent,
     AddQuestionDialog,
-    ViewSurveyComponent
+    ViewSurveyComponent,
+    PreviewSurveyComponent
   ],
   imports: [
     BrowserModule,

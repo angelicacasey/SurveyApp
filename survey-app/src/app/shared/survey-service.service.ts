@@ -27,9 +27,11 @@ const MOCK_PROJECTS: Project[] = [
     	"lastName": "Fudd",
     	"email": "efudd@meddevlmtd.com"
     },
-    "contactFirstName": "Elmer",
-    "contactLastName": "Fudd",
-    "contactEmail": "efudd@meddevlmtd.com"
+    "programManager": {
+    	"firstName": "Sherlock",
+	 	"lastName": "Holmes",
+	 	"email": "sholmes@medacuitysoftware.com"
+    }
   },
   {
     "id": "project2",
@@ -39,9 +41,11 @@ const MOCK_PROJECTS: Project[] = [
     	"lastName": "Simpson",
     	"email": "hsimpson@medevlmtd.com"
     },
-    "contactFirstName": "Sherlock",
-    "contactLastName": "Holmes",
-    "contactEmail": "sholmes@meddevlmtd.com"
+    "programManager": {
+    	"firstName": "Sherlock",
+	 	"lastName": "Holmes",
+	 	"email": "sholmes@medacuitysoftware.com"
+    }
   }
 ];
 
@@ -79,7 +83,8 @@ const MOCK_SURVEYS: Survey[] = [
 	 		"email": "msmith@meddevlmtd.com"
 	 	},
 	 	"status": "Draft",
-	 	"createdDt": "2018-11-02T16:11:33.448Z"
+	 	"createdDt": "2018-11-02T16:11:33.448Z",
+	 	"questions": []
   	},
   	 {
   		"id": "Survey2",
@@ -99,7 +104,27 @@ const MOCK_SURVEYS: Survey[] = [
 	 		"email": "jdoe@outlook.com"
 	 	},
 	 	"status": "Sent",
-	 	"createdDt": "2018-10-03T11:23:33.448Z"
+	 	"createdDt": "2018-10-03T11:23:33.448Z",
+	 	"questions": [
+	 	  {
+	 	  	"id": "1a",
+	 	    "question": "Please provide a rating for George Smith",
+	 	    "questionType": "Employee_Rating",
+	 	    "employeeId": "empl1",
+			"options": [],
+			"rating": 0,
+			"response": ""
+		  },
+		  {
+	 	  	"id": "1b",
+	 	    "question": "Please provide a rating for Mary Jones",
+	 	    "questionType": "Employee_Rating",
+	 	    "employeeId": "empl2",
+			"options": [],
+			"rating": 0,
+			"response": ""
+		  }
+	 	]
   	},
   	{
   		"id": "Survey3",
@@ -119,7 +144,36 @@ const MOCK_SURVEYS: Survey[] = [
 	 		"email": "rweasley@hogwarts.edu"
 	 	},
 	 	"status": "Got Response",
-	 	"createdDt": "2018-11-02T16:11:33.448Z"
+	 	"createdDt": "2018-11-02T16:11:33.448Z",
+	 	"questions": [
+	 	  {
+	 	  	"id": "2a",
+	 	    "question": "Please provide a rating for George Smith",
+	 	    "questionType": "Employee_Rating",
+	 	    "employeeId": "empl1",
+			"options": [],
+			"rating": 4,
+			"response": ""
+		  },
+		  {
+	 	  	"id": "2b",
+	 	    "question": "Please provide a rating for MedAcuity in general",
+	 	    "questionType": "MedAcuity_Rating",
+	 	    "employeeId": "",
+			"options": [],
+			"rating": 3,
+			"response": ""
+		  },
+		  {
+	 	  	"id": "2c",
+	 	    "question": "How can we improve your project?",
+	 	    "questionType": "Custom",
+	 	    "employeeId": "",
+			"options": ["add more people", "provide project management"],
+			"rating": 0,
+			"response": "add more people"
+		  }
+	 	]
   	}
   ]
 
@@ -130,6 +184,7 @@ const MOCK_SURVEYS: Survey[] = [
 export class SurveyService {
 
   currentSurveys: Survey[] = MOCK_SURVEYS;
+  currentProjects: Project[] = MOCK_PROJECTS;
 
   constructor() { 
 
@@ -140,7 +195,7 @@ export class SurveyService {
   }
 
   getListOfProjectsForClient(clientId): Observable<Project[]> {
-  	return of(MOCK_PROJECTS);
+  	return of(this.currentProjects);
   }
 
   getListOfEmployeesOnProject(projectId): Observable<Employee[]> {
@@ -156,14 +211,23 @@ export class SurveyService {
   	if (!survey.id) {
   		survey.id = this.getUniqueId();
   		survey.createdDt = new Date().toISOString();
+  		this.currentSurveys.push(survey);
+  	} else {
+  		var index = this.currentSurveys.indexOf(s => s.id === survey.id);
+  		this.currentSurveys[index] = survey;
   	}
-  	this.currentSurveys.push(survey);
+
   	return survey;
   }
 
-  getSurvey(surveyId): Survey {
-  	var survey = this.currentSurveys.find(s => s.id == surveyId);
-  	return survey;
+  getSurvey(surveyId): Observable<Survey> {
+  	var survey = this.currentSurveys.find(s => s.id === surveyId);
+  	return of(survey);
+  }
+
+  getProject(projectId): Observable<Project> {
+  	var project = this.currentProjects.find(p => p.id === projectId);
+  	return of(project);
   }
 
   getUniqueId(): string {

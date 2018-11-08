@@ -4,4 +4,6 @@ export class Question {
 	questionType: string;
 	employeeId: string;
 	options: string[];
+	rating: number;
+	response: string
 }

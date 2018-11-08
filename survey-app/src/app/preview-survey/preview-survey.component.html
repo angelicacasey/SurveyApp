@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutGap="30px">
+  <h4 class="mat-h4">Project: <b>{{survey.projectName}} </b></h4>
+  <h4 class="mat-h4">Client: <b>{{survey.clientName}}</b></h4>
+  </div>
+  <div class="container" fxLayout="row" fxLayout.xs="column">
+    <h4 class="mat-h4">The following survey will be sent to <b>{{survey.recipient.firstName}} {{survey.recipient.lastName}}</b></h4>
+  </div>
+  <div class="container" fxLayout="row" fxLayout.xs="column">
+	<mat-card>
+	  <div [innerHtml]=surveyHtml></div>
+	</mat-card>
+  </div>
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
+  	<button *ngIf="survey.status==='Draft'" mat-raised-button color="primary" (click)="editSurvey()">Edit Survey</button>
+  	<button mat-raised-button color="primary" (click)="sendSurvey()">Send Survey</button>
+  </div>
+</div>

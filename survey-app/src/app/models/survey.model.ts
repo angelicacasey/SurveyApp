@@ -1,4 +1,5 @@
 import { Person } from './person.model';
+import { Question } from './question.model';
 
 export class Survey { 
 	id: string;
@@ -11,5 +12,5 @@ export class Survey {
 	recipient: Person;
 	status: string;
 	createdDt: string;
-
+	questions: Question[];
 }

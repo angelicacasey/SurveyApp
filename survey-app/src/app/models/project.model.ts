@@ -4,7 +4,5 @@ export class Project {
 	id: string;
 	itemName: string;
 	contact: Person;
-	contactFirstName: string;
-	contactLastName: string;
-	contactEmail: string;
+	programManager: Person;
 }

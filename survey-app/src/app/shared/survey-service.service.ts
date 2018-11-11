@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
 
 import { Client } from '../models/client.model';
 import { Project } from '../models/project.model';
@@ -84,7 +85,9 @@ const MOCK_SURVEYS: Survey[] = [
 	 	},
 	 	"status": "Draft",
 	 	"createdDt": "2018-11-02T16:11:33.448Z",
-	 	"questions": []
+	 	"questions": [],
+	 	"surveyform": "",
+     "respondedDt": ""
   	},
   	 {
   		"id": "Survey2",
@@ -124,7 +127,9 @@ const MOCK_SURVEYS: Survey[] = [
 			"rating": 0,
 			"response": ""
 		  }
-	 	]
+	 	],
+	 	"surveyform": "",
+     "respondedDt": ""
   	},
   	{
   		"id": "Survey3",
@@ -153,7 +158,7 @@ const MOCK_SURVEYS: Survey[] = [
 	 	    "employeeId": "empl1",
 			"options": [],
 			"rating": 4,
-			"response": ""
+			"response": "He's awesome!"
 		  },
 		  {
 	 	  	"id": "2b",
@@ -172,8 +177,19 @@ const MOCK_SURVEYS: Survey[] = [
 			"options": ["add more people", "provide project management"],
 			"rating": 0,
 			"response": "add more people"
-		  }
-	 	]
+		  },
+      {
+         "id": "2e",
+         "question": "Are we delivering?",
+         "questionType": "Custom",
+         "employeeId": "",
+      "options": [],
+      "rating": 0,
+      "response": "More or less we are on schedule."
+      }
+	 	],
+	 	"surveyform": "",
+     "respondedDt": "2018-11-05T08:23:33.448Z"
   	}
   ]
 
@@ -185,9 +201,17 @@ export class SurveyService {
 
   currentSurveys: Survey[] = MOCK_SURVEYS;
   currentProjects: Project[] = MOCK_PROJECTS;
+  mockSurveyForm: any;
 
-  constructor() { 
+  constructor(private httpClient:HttpClient) { 
+  	this.getMockSurveyForm();
+  }
 
+  getMockSurveyForm(): void {
+  	this.httpClient.get('assets/surveyForm.html', {responseType: 'text'}).subscribe(data => {
+  		this.mockSurveyForm = data;
+  		console.log(this.mockSurveyForm);
+  	});
   }
 
   getListOfClients(): Observable<Client[]> {
@@ -223,7 +247,13 @@ export class SurveyService {
 
   getSurvey(surveyId): Observable<Survey> {
   	var survey = this.currentSurveys.find(s => s.id === surveyId);
+  	survey.surveyform = this.mockSurveyForm;
   	return of(survey);
+  }
+
+  sendSurvey(survey: Survey): void {
+  	var survey = this.currentSurveys.find(s => s.id === survey.id);
+  	survey.status = "Sent";
   }
 
   getProject(projectId): Observable<Project> {

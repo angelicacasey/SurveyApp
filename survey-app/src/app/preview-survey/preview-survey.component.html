@@ -8,11 +8,13 @@
   </div>
   <div class="container" fxLayout="row" fxLayout.xs="column">
 	<mat-card>
-	  <div [innerHtml]=surveyHtml></div>
+	  <div #surveyContainer></div>
 	</mat-card>
   </div>
   <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutGap="10px">
   	<button *ngIf="survey.status==='Draft'" mat-raised-button color="primary" (click)="editSurvey()">Edit Survey</button>
+    <button *ngIf="survey.status!='Draft'" mat-raised-button color="warn" (click)="goBack()">Return</button>
   	<button mat-raised-button color="primary" (click)="sendSurvey()">Send Survey</button>
+
   </div>
 </div>

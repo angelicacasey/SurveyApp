@@ -1,7 +1,34 @@
 <div class="container">
-
+<h4>{{title}}</h4> 
   <h4 class="mat-h4">Project: <b>{{survey.projectName}} </b> Client: <b>{{survey.clientName}}</b></h4>
-  <h4 class="mat-h4">The following survey will be sent to <b>{{survey.recipient.firstName}} {{survey.recipient.lastName}}</b></h4>
+  <h4 class="mat-h4">Survey responded on: <b>{{survey.respondedDt | date: "short"}} </b></h4>
+
+  <ol>
+  	<li *ngFor="let question of survey.questions">
+  	<p>{{question.question}}</p>
+
+  	<div *ngIf="isRatingQuestion(question.questionType)">
+  		<i *ngFor="let i of convertRatingToArray(question.rating)" class="fa fa-star"></i>
+  		<p *ngIf="question.response">Comments: {{question.response}} </p>
+  	</div>
+
+  	<div *ngIf="isCustomQuestion(question.questionType)">
+  	  <div *ngIf="haveOptions(question.options); then optionTemplate else responseTemplate"></div>
+  	  <ng-template #optionTemplate>
+  	  <div class="add-bottom-padding">
+        <mat-radio-group class="option-radio-group">
+          <mat-radio-button *ngFor="let option of question.options; let i = index" value={{i}} [checked]="isSelectedOption(option, question)">{{option}}</mat-radio-button>
+        </mat-radio-group>
+      </div> 
+      </ng-template>
+      <ng-template #responseTemplate>
+   		<p>Response: {{question.response}} </p>     	
+      </ng-template>
+  	</div>
+  	
+  	</li>
+
+  </ol>
   
-  <button (click)="goBack()">Return</button>
+  <button mat-raised-button color="primary" (click)="goBack()">Return</button>
 </div>

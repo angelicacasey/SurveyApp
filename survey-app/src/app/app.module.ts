@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { HttpClientModule } from '@angular/common/http';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 import { CustomMaterialModule} from "./material.module"
 import { AppRoutingModule } from './app-routing.module'; 
@@ -38,7 +40,9 @@ import { PreviewSurveyComponent } from './preview-survey/preview-survey.componen
     CustomMaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    HttpClientModule,
+    AngularFontAwesomeModule
   ],
   entryComponents: [AddQuestionDialog],
   providers: [],

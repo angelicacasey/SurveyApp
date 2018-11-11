@@ -39,12 +39,16 @@ export class SurveyListComponent implements OnInit {
 
   viewSurvey(survey: Survey) : void {
   	console.log("View survey: ", survey.id + ": " + survey.itemName);
-  	//this.router.navigate(['/surveys/view/'+ survey.id]);
-    this.router.navigate(['/surveys/preview/'+ survey.id]);
+  	this.router.navigate(['/surveys/view/'+ survey.id]);
   }
 
   editSurvey(survey: Survey): void {
     console.log("Edit survey: ", survey.id + ": " + survey.itemName);
     this.router.navigate(['/surveys/edit/'+ survey.id]);
+  }
+
+  resendSurvey(survey: Survey): void {
+    console.log("Resending survey, preview it first");
+    this.router.navigate(['/surveys/preview/'+ survey.id]);
   }
 }

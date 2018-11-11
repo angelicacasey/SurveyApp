@@ -201,7 +201,7 @@ export class AddSurveyComponent implements OnInit {
         this.survey = new Survey();
       }
       this.survey.itemName = this.surveyForm.value.surveyName;
-      var project = this.projects.find(p => p.id === this.survey.projectId);
+      var project = this.selectedProject;
 
       if (!this.inEditMode) {
         this.survey.projectId = this.surveyForm.value.project;

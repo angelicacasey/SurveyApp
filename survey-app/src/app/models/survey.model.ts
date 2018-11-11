@@ -12,5 +12,7 @@ export class Survey {
 	recipient: Person;
 	status: string;
 	createdDt: string;
+	respondedDt: string;
 	questions: Question[];
+	surveyform: string;
 }

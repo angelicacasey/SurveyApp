@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Survey } from '../models/survey.model';
+import { Question } from '../models/question.model';
 import { SurveyService } from '../shared/survey-service.service';
 
 @Component({
@@ -33,5 +34,27 @@ export class ViewSurveyComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  convertRatingToArray(rating): number[] {
+    return Array(rating);
+  }
+
+  isRatingQuestion(questionType):boolean {
+    return questionType.indexOf('Rating') >= 0;
+  }
+
+  isCustomQuestion(questionType):boolean {
+    return questionType === 'Custom';
+  }
+
+  haveOptions(options):boolean {
+    return (options && options.length > 0);
+  }
+
+  isSelectedOption(option:string, question:Question) {
+    var temp = option === question.response;
+    console.log("isSelectedOption " + option +" => " + question.response+" result: " + temp);
+    return option === question.response;
   }
 }

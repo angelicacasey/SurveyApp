@@ -12,6 +12,8 @@ export class Survey {
 	recipient: Person;
 	status: string;
 	createdDt: string;
+	lastSentDt: string;
+	numTimesSent: number;
 	respondedDt: string;
 	questions: Question[];
 	surveyform: string;

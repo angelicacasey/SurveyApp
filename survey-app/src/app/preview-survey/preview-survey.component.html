@@ -1,10 +1,12 @@
 <div class="container">
+<h4>Preview Survey</h4> 
   <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutGap="30px">
-  <h4 class="mat-h4">Project: <b>{{survey.projectName}} </b></h4>
-  <h4 class="mat-h4">Client: <b>{{survey.clientName}}</b></h4>
+    <p>Name: <b>{{survey.itemName}}</b></p> 
+    <p>Project: <b>{{survey.projectName}} </b></p>
+    <p>Client: <b>{{survey.clientName}}</b></p>
   </div>
   <div class="container" fxLayout="row" fxLayout.xs="column">
-    <h4 class="mat-h4">The following survey will be sent to <b>{{survey.recipient.firstName}} {{survey.recipient.lastName}}</b></h4>
+    <p>The following survey will be sent to <b>{{survey.recipient.firstName}} {{survey.recipient.lastName}}</b></p>
   </div>
   <div class="container" fxLayout="row" fxLayout.xs="column">
 	<mat-card>

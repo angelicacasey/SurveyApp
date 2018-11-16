@@ -2,3 +2,8 @@
   height: 80%;
   margin: 10px;
 }
+
+.mat-nav-list a.active {
+    background: grey;
+    color: white;
+}

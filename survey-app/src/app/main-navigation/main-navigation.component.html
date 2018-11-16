@@ -8,11 +8,26 @@
 <mat-sidenav-container class="example-container">
   <mat-sidenav #drawer mode="side" opened role="navigation">
     <mat-nav-list>
-      <a mat-list-item routerLink='/surveys'>Surveys</a>
-      <a mat-list-item routerLink='/reports'>Reports</a>
-      <a mat-list-item routerLink='/clients'>Clients</a>
-      <a mat-list-item routerLink='/projects'>Projects</a>
-      <a mat-list-item routerLink='/employees'>Employees</a>
+      <a mat-list-item routerLink='/surveys' routerLinkActive="active">
+        <i class="material-icons">assignment</i>
+        Surveys
+      </a>
+      <a mat-list-item routerLink='/reports' routerLinkActive="active">
+        <i class="material-icons">poll</i>
+        Reports
+      </a>
+      <a mat-list-item routerLink='/clients' routerLinkActive="active">
+        <i class="material-icons">store</i>
+        Clients
+      </a>
+      <a mat-list-item routerLink='/projects' routerLinkActive="active">
+      <i class="material-icons">work</i>
+        Projects
+      </a>
+      <a mat-list-item routerLink='/employees' routerLinkActive="active">
+        <i class="material-icons">people</i>
+        Employees
+      </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

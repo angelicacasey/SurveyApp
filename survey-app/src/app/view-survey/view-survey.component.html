@@ -1,15 +1,26 @@
 <div class="container">
-<h4>{{title}}</h4> 
-  <h4 class="mat-h4">Project: <b>{{survey.projectName}} </b> Client: <b>{{survey.clientName}}</b></h4>
-  <h4 class="mat-h4">Survey responded on: <b>{{survey.respondedDt | date: "short"}} </b></h4>
+<h4>View Survey</h4> 
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutGap="30px">
+    <p>Name: <b>{{survey.itemName}}</b></p> 
+    <p>Project: <b>{{survey.projectName}}</b></p> 
+    <p>Client: <b>{{survey.clientName}}</b></p>
+    <p>Recipient: <b>{{survey.recipient.firstName}} {{survey.recipient.lastName}}</b></p>
+  </div>
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutGap="30px">
+    <p>Survey sent on: <b>{{survey.lastSentDt | date: "short"}} </b></p>
+    <p>Survey sent <b>{{survey.numTimesSent}}</b> time(s)</p>
+    <p>Survey responded on: <b>{{survey.respondedDt | date: "short"}} </b></p>
+  </div>
 
+<div class="container">
+  <h5>Responses:</h5>
   <ol>
   	<li *ngFor="let question of survey.questions">
   	<p>{{question.question}}</p>
 
   	<div *ngIf="isRatingQuestion(question.questionType)">
-  		<i *ngFor="let i of convertRatingToArray(question.rating)" class="fa fa-star"></i>
-  		<p *ngIf="question.response">Comments: {{question.response}} </p>
+  		<i *ngFor="let i of convertRatingToArray(question.rating)" class="material-icons starrating">star</i>
+  		<p *ngIf="question.response">Comments: <b>{{question.response}}</b> </p>
   	</div>
 
   	<div *ngIf="isCustomQuestion(question.questionType)">
@@ -22,13 +33,13 @@
       </div> 
       </ng-template>
       <ng-template #responseTemplate>
-   		<p>Response: {{question.response}} </p>     	
+   		<p>Response: <b>{{question.response}}</b> </p>     	
       </ng-template>
   	</div>
   	
   	</li>
 
   </ol>
-  
+  </div>
   <button mat-raised-button color="primary" (click)="goBack()">Return</button>
 </div>

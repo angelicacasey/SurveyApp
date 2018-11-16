@@ -87,7 +87,9 @@ const MOCK_SURVEYS: Survey[] = [
 	 	"createdDt": "2018-11-02T16:11:33.448Z",
 	 	"questions": [],
 	 	"surveyform": "",
-     "respondedDt": ""
+     "respondedDt": "",
+     "lastSentDt": "",
+     "numTimesSent": 0
   	},
   	 {
   		"id": "Survey2",
@@ -129,7 +131,9 @@ const MOCK_SURVEYS: Survey[] = [
 		  }
 	 	],
 	 	"surveyform": "",
-     "respondedDt": ""
+     "respondedDt": "",
+     "lastSentDt": "2018-10-03T11:24:33.448Z",
+     "numTimesSent": 0
   	},
   	{
   		"id": "Survey3",
@@ -189,7 +193,9 @@ const MOCK_SURVEYS: Survey[] = [
       }
 	 	],
 	 	"surveyform": "",
-     "respondedDt": "2018-11-05T08:23:33.448Z"
+     "respondedDt": "2018-11-05T08:23:33.448Z",
+     "lastSentDt": "2018-11-02T16:20:33.448Z",
+     "numTimesSent": 1
   	}
   ]
 

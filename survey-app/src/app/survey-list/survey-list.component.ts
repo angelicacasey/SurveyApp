@@ -5,6 +5,16 @@ import {Router} from "@angular/router";
 import {Survey} from "../models/survey.model"
 import {SurveyService} from "../shared/survey-service.service"
 
+export class SurveyItem {
+  id: string;
+  name: string;
+  status: string;
+  projectName: string;
+  recipient: string;
+  createdBy: string;
+  lastUpdatedDt: string;
+}
+
 @Component({
   selector: 'app-survey-list',
   templateUrl: './survey-list.component.html',
@@ -12,7 +22,7 @@ import {SurveyService} from "../shared/survey-service.service"
 })
 export class SurveyListComponent implements OnInit {
 
-  displayedColumns: string[] = ["itemName", "status", "projectName", "recipient", "createdBy", "createdDt", "action"];
+  displayedColumns: string[] = ["itemName", "status", "projectName", "recipient", "createdBy", "updatedDt", "action"];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatSort) sort: MatSort;
@@ -29,7 +39,27 @@ export class SurveyListComponent implements OnInit {
 
   getListOfSurveys(): void {
   	this.surveyService.getListOfSurveys().subscribe(result => {
-  		this.dataSource.data = result;
+      var surveyItems: SurveyItem[] = [];
+      for (let survey of result) {
+        var item = new SurveyItem();
+        item.id = survey.id;
+        item.name = survey.itemName;
+        item.status = survey.status;
+        item.projectName = survey.projectName;
+        item.recipient = survey.recipient.firstName + " " + survey.recipient.lastName;
+        item.createdBy = survey.createdBy.firstName + " " + survey.createdBy.lastName;
+        var status = survey.status;
+        var updatedDt = survey.createdDt;
+        if (status === "Got Response") {
+          updatedDt = survey.respondedDt;
+        } else if (status === "Sent") {
+          updatedDt = survey.lastSentDt;
+        }
+        item.lastUpdatedDt = updatedDt;
+
+        surveyItems.push(item);
+      }
+  		this.dataSource.data = surveyItems;
   	});
   }
 

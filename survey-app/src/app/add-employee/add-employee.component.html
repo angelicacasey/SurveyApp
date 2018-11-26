@@ -1,3 +1,23 @@
-<p>
-  add-employee works!
-</p>
+<div class="container">
+<form [formGroup]="employeeForm" class="normal-form" (ngSubmit)="onSubmit()">
+  <h4>{{title}}</h4>
+  <div class="container">
+	<mat-form-field>
+	  <input formControlName="firstName" matInput placeholder="First Name">
+	  <mat-error>This field is required</mat-error>
+	</mat-form-field>
+  </div>
+  <div class="container">
+	<mat-form-field>
+	  <input formControlName="lastName" matInput placeholder="Last Name">
+	  <mat-error>This field is required</mat-error>
+	</mat-form-field>
+  </div>
+
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="20px">
+    <button mat-raised-button color="primary" type="submit">Save</button>
+    <button mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
+  </div>
+
+</form>
+</div>

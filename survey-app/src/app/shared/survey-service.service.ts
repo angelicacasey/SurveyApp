@@ -304,6 +304,22 @@ export class SurveyService {
     return client;
   }
 
+  getEmployee(employeeId): Observable<Employee> {
+    var employee = this.currentEmployees.find(e => e.id === employeeId);
+    return of(employee);
+  }
+
+  saveEmployee(employee: Employee): Employee {
+    if (!employee.id) {
+      employee.id = this.getUniqueId();
+      this.currentEmployees.push(employee);
+    } else {
+      var index = this.currentEmployees.findIndex(e => e.id === employee.id);
+      this.currentEmployees[index] = employee;
+    }
+    return employee;
+  }
+
   getUniqueId(): string {
 	return new Date().valueOf().toString(36) + Math.random().toString(36).substr(2);
   }

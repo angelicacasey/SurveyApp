@@ -1,4 +1,5 @@
 import { Person } from "./person.model";
+import { Employee } from "./employee.model";
 
 export class Project {
 	id: string;
@@ -7,4 +8,5 @@ export class Project {
 	clientName: string;
 	contact: Person;
 	programManager: Person;
+	employees: Employee[];
 }

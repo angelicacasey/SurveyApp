@@ -1,3 +1,89 @@
-<p>
-  add-project works!
-</p>
+<div class="container">
+  <form [formGroup]="projectForm" class="normal-form" (ngSubmit)="onSubmit()">
+  <h4>{{title}}</h4>
+    <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="30px">
+      <div fxFlex="33%">
+        <mat-form-field>
+          <input formControlName="projectName" matInput placeholder="Project Name">
+          <mat-error>{{getProjectNameError()}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="67%">
+        <mat-form-field>
+          <mat-select formControlName="client" placeholder="Client">
+            <ng-container *ngFor="let client of clients">
+              <mat-option value="{{client.id}}">{{client.itemName}}</mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-error>This field is required.</mat-error>
+        </mat-form-field>
+      </div>
+	</div>
+
+	<div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="30px">
+		<h5 fxFlexAlign="flex-end" fxFlex="10%">Primary Contact:</h5>
+		<div>
+	      <mat-form-field>
+	        <input formControlName="contactFirstName" matInput placeholder="First Name">
+	        <mat-error>This field is required.</mat-error>
+	      </mat-form-field>
+	    </div>
+	    <div>
+	      <mat-form-field>
+	        <input formControlName="contactLastName" matInput placeholder="Last Name">
+	        <mat-error>This field is required.</mat-error>
+	      </mat-form-field>
+	    </div>
+	    <div>
+	      <mat-form-field>
+	        <input formControlName="contactEmail" matInput placeholder="Email">
+	        <mat-error>{{getContactEmailError()}}</mat-error>
+	      </mat-form-field>
+	    </div>
+    </div>
+
+	<div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="30px">
+    	<h5 fxFlexAlign="flex-end" fxFlex="10%">Program Manager:</h5>
+		<div>
+	      <mat-form-field>
+	        <input formControlName="pmFirstName" matInput placeholder="First Name">
+	        <mat-error>This field is required.</mat-error>
+	      </mat-form-field>
+	    </div>
+	    <div>
+	      <mat-form-field>
+	        <input formControlName="pmLastName" matInput placeholder="Last Name">
+	        <mat-error>This field is required.</mat-error>
+	      </mat-form-field>
+	    </div>
+	    <div>
+	      <mat-form-field>
+	        <input formControlName="pmEmail" matInput placeholder="Email">
+	        <mat-error>{{getPmEmailError()}}</mat-error>
+	      </mat-form-field>
+	    </div>
+    </div>
+
+    <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="30px">
+      <div fxFlex="40%">
+        <h5>All Employees:</h5>
+        <mat-action-list>
+          <button mat-list-item *ngFor="let emp of allEmployees" (click)="assignEmployee(emp)"> {{emp.firstName}} {{emp.lastName}} </button>
+        </mat-action-list>
+      </div>
+
+      <div fxFlex="40%">
+        <h5>Assigned Employees:</h5>
+        <mat-action-list>
+          <button mat-list-item *ngFor="let emp of selectedEmployees" (click)="unassignEmployee(emp)"> {{emp.firstName}} {{emp.lastName}} </button>
+        </mat-action-list>
+      </div>
+	</div>
+
+	<div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="20px">
+      <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">Save</button>
+      <button mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
+    </div>
+
+  </form>
+</div>

@@ -37,7 +37,14 @@ const MOCK_PROJECTS: Project[] = [
     	"firstName": "Sherlock",
 	 	"lastName": "Holmes",
 	 	"email": "sholmes@medacuitysoftware.com"
-    }
+    },
+    "employees": [
+    {
+      "id": "emp2",
+      "itemName": "Hermoine Granger",
+      "firstName": "Hermoine",
+      "lastName": "Granger"
+    }]
   },
   {
     "id": "project2",
@@ -53,7 +60,14 @@ const MOCK_PROJECTS: Project[] = [
     	"firstName": "Sherlock",
 	 	"lastName": "Holmes",
 	 	"email": "sholmes@medacuitysoftware.com"
-    }
+    },
+    "employees": [
+    {
+      "id": "emp1",
+      "itemName": "Harry Potter",
+      "firstName": "Harry",
+      "lastName": "Potter"
+    }]
   }
 ];
 
@@ -282,6 +296,19 @@ export class SurveyService {
   getProject(projectId): Observable<Project> {
   	var project = this.currentProjects.find(p => p.id === projectId);
   	return of(project);
+  }
+
+  saveProject(project: Project): Project {
+    // assign an id
+    if (!project.id) {
+      project.id = this.getUniqueId();
+      this.currentProjects.push(project);
+    } else {
+      var index = this.currentProjects.findIndex(s => s.id === project.id);
+      this.currentProjects[index] = project;
+    }
+
+    return project;
   }
 
   getClient(clientId): Observable<Client> {

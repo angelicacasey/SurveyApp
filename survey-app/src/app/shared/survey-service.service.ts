@@ -214,6 +214,8 @@ export class SurveyService {
 
   currentSurveys: Survey[] = MOCK_SURVEYS;
   currentProjects: Project[] = MOCK_PROJECTS;
+  currentClients: Client[] = MOCK_CLIENTS;
+  currentEmployees: Employee[] = MOCK_EMPLOYEES;
   mockSurveyForm: any;
 
   constructor(private httpClient:HttpClient) { 
@@ -223,12 +225,12 @@ export class SurveyService {
   getMockSurveyForm(): void {
   	this.httpClient.get('assets/surveyForm.html', {responseType: 'text'}).subscribe(data => {
   		this.mockSurveyForm = data;
-  		console.log(this.mockSurveyForm);
+  		//console.log(this.mockSurveyForm);
   	});
   }
 
   getListOfClients(): Observable<Client[]> {
-  	return of(MOCK_CLIENTS);
+  	return of(this.currentClients);
   }
 
   getListOfProjects(): Observable<Project[]> {
@@ -236,7 +238,11 @@ export class SurveyService {
   }
 
   getListOfEmployees(): Observable<Employee[]> {
-    return of(MOCK_EMPLOYEES);
+    return of(this.currentEmployees);
+  }
+
+  getListOfSurveys(): Observable<Survey[]> {
+    return of(this.currentSurveys);
   }
 
   getListOfProjectsForClient(clientId): Observable<Project[]> {
@@ -244,11 +250,7 @@ export class SurveyService {
   }
 
   getListOfEmployeesOnProject(projectId): Observable<Employee[]> {
-  	return of(MOCK_EMPLOYEES);
-  }
-
-  getListOfSurveys(): Observable<Survey[]> {
-  	return of(this.currentSurveys);
+  	return of(this.currentEmployees);
   }
 
   saveSurvey(survey: Survey): Survey {
@@ -280,6 +282,26 @@ export class SurveyService {
   getProject(projectId): Observable<Project> {
   	var project = this.currentProjects.find(p => p.id === projectId);
   	return of(project);
+  }
+
+  getClient(clientId): Observable<Client> {
+    var client = this.currentClients.find(c => c.id === clientId);
+    return of(client);
+  }
+
+  saveClient(client: Client): Client {
+    // assign an id
+    if (!client.id) {
+      client.id = this.getUniqueId();
+      //client.createdDt = new Date().toISOString();
+      this.currentClients.push(client);
+    } else {
+      var clientId = client.id;
+      var index = this.currentClients.findIndex(s => s.id === clientId);
+      this.currentClients[index] = client;
+    }
+
+    return client;
   }
 
   getUniqueId(): string {

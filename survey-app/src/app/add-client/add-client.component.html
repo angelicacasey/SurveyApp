@@ -1,3 +1,29 @@
-<p>
-  add-client works!
-</p>
+<div class="container">
+<form [formGroup]="clientForm" class="normal-form" (ngSubmit)="onSubmit()">
+  <h4>{{title}}</h4>
+  <div class="container">
+	<mat-form-field>
+	  <input formControlName="clientName" matInput placeholder="Client Name">
+	  <mat-error>{{getClientNameError()}}</mat-error>
+	</mat-form-field>
+  </div>
+  <div class="container">
+	<mat-form-field class="textarea-width">
+	  <textarea matInput formControlName="description" placeholder="Description"></textarea>
+	</mat-form-field>
+  </div>
+
+  <div class="container" *ngIf="projectList">
+  	<h4>Associated Projects</h4>
+  	<mat-list>
+  		<mat-list-item *ngFor="let project of projectList">{{project.itemName}}</mat-list-item>
+  	</mat-list>
+  </div>
+
+  <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutNoWrap fxLayoutGap="20px">
+    <button mat-raised-button color="primary" type="submit">Save</button>
+    <button mat-raised-button color="warn" (click)="onCancel()">Cancel</button>
+  </div>
+
+</form>
+</div>

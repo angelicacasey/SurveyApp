@@ -1,6 +1,6 @@
-<mat-toolbar color="warn">
+<mat-toolbar color="primary">
   <mat-toolbar-row>
-    <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" color="primary">
+    <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
       <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
     </button>
   </mat-toolbar-row>
@@ -9,23 +9,23 @@
   <mat-sidenav #drawer mode="side" opened role="navigation">
     <mat-nav-list>
       <a mat-list-item routerLink='/surveys' routerLinkActive="active">
-        <i class="material-icons">assignment</i>
+        <mat-icon>assignment</mat-icon>
         Surveys
       </a>
       <a mat-list-item routerLink='/reports' routerLinkActive="active">
-        <i class="material-icons">poll</i>
+        <mat-icon>poll</mat-icon>
         Reports
       </a>
       <a mat-list-item routerLink='/clients' routerLinkActive="active">
-        <i class="material-icons">store</i>
+        <mat-icon>store</mat-icon>
         Clients
       </a>
       <a mat-list-item routerLink='/projects' routerLinkActive="active">
-      <i class="material-icons">work</i>
+      <mat-icon>work</mat-icon>
         Projects
       </a>
       <a mat-list-item routerLink='/employees' routerLinkActive="active">
-        <i class="material-icons">people</i>
+        <mat-icon>people</mat-icon>
         Employees
       </a>
     </mat-nav-list>

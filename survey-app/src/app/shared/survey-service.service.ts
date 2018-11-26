@@ -11,11 +11,14 @@ import { Survey } from '../models/survey.model';
 const MOCK_CLIENTS: Client[] = [
   {
     "id": "client1",
-    "itemName": "Super Client"
+    "itemName": "Super Client",
+    "description": "Medical devices specializing in insulin pumps"
   },
   {
     "id": "client2",
-    "itemName": "Uber Client"
+    "itemName": "Uber Client",
+    "description": "Robotics non-medical."
+
   }
 ];
 
@@ -23,6 +26,8 @@ const MOCK_PROJECTS: Project[] = [
   {
     "id": "project1",
     "itemName": "ABC",
+    "clientId": "client1",
+    "clientName": "Super Client",
     "contact": {
     	"firstName": "Elmer",
     	"lastName": "Fudd",
@@ -37,6 +42,8 @@ const MOCK_PROJECTS: Project[] = [
   {
     "id": "project2",
     "itemName": "DEF",
+    "clientId": "client1",
+    "clientName": "Super Client",
     "contact": {
     	"firstName": "Homer",
     	"lastName": "Simpson",
@@ -222,6 +229,14 @@ export class SurveyService {
 
   getListOfClients(): Observable<Client[]> {
   	return of(MOCK_CLIENTS);
+  }
+
+  getListOfProjects(): Observable<Project[]> {
+    return of(this.currentProjects);
+  }
+
+  getListOfEmployees(): Observable<Employee[]> {
+    return of(MOCK_EMPLOYEES);
   }
 
   getListOfProjectsForClient(clientId): Observable<Project[]> {

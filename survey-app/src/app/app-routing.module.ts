@@ -8,19 +8,28 @@ import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { AddSurveyComponent } from './add-survey/add-survey.component';
 import { ViewSurveyComponent } from './view-survey/view-survey.component';
 import { PreviewSurveyComponent } from './preview-survey/preview-survey.component';
+import { AddClientComponent } from './add-client/add-client.component';
+import { AddProjectComponent } from './add-project/add-project.component';
+import { AddEmployeeComponent } from './add-employee/add-employee.component';
 
 
 const routes: Routes = [
-	{ path: '', redirectTo:'/surveys', pathMatch:'full' },
-	{ path: 'surveys', component: SurveyListComponent, data: { title: 'Survey List' } },
-	{ path: 'surveys/add', component: AddSurveyComponent, data: { title: 'Add Survey' } },
-	{ path: 'surveys/edit/:id', component: AddSurveyComponent, data: { title: 'Edit Survey' } },
-	{ path: 'surveys/view/:id', component: ViewSurveyComponent, data: { title: 'View Survey' } },
-	{ path: 'surveys/preview/:id', component: PreviewSurveyComponent, data: { title: 'Preview Survey' } },
-	{ path: 'reports', component: ReportsComponent, data: { title: 'Reports' } },
-	{ path: 'clients', component: ClientListComponent, data: { title: 'Client List' } },
-	{ path: 'projects', component: ProjectListComponent, data: { title: 'Project List' } },
-	{ path: 'employees', component: EmployeeListComponent, data: { title: 'Employee List' } }
+	{ path: '', redirectTo:'/surveys', pathMatch:'full'},
+	{ path: 'surveys', component: SurveyListComponent},
+	{ path: 'surveys/add', component: AddSurveyComponent},
+	{ path: 'surveys/edit/:id', component: AddSurveyComponent},
+	{ path: 'surveys/view/:id', component: ViewSurveyComponent},
+	{ path: 'surveys/preview/:id', component: PreviewSurveyComponent},
+	{ path: 'reports', component: ReportsComponent},
+	{ path: 'clients', component: ClientListComponent},
+	{ path: 'clients/add', component: AddClientComponent},
+	{ path: 'clients/edit/:id', component: AddClientComponent},
+	{ path: 'projects', component: ProjectListComponent},
+	{ path: 'projects/add', component: AddProjectComponent},
+	{ path: 'projects/edit/:id', component: AddProjectComponent},
+	{ path: 'employees', component: EmployeeListComponent},
+	{ path: 'employees/add', component: AddEmployeeComponent},
+	{ path: 'employees/edit/:id', component: AddEmployeeComponent}
 ];
 
 @NgModule({

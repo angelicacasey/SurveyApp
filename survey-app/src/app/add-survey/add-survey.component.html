@@ -78,7 +78,7 @@
     </div>
     <div>
       <mat-form-field>
-        <mat-select [(value)]="selectedEmployee" placeholder="Employee" [disabled]="!isProjectSelected">
+        <mat-select [(value)]="selectedEmployee" placeholder="Employee" [disabled]="!isProjectSelected || isAllEmployeesChecked">
           <ng-container *ngFor="let employee of employees">
             <mat-option value="{{employee.id}}">{{employee.itemName}}</mat-option>
           </ng-container>
@@ -87,6 +87,9 @@
     </div>
     <div>
       <button mat-raised-button color="primary" [disabled]="!selectedEmployee" (click)="addEmployeeQuestion()">Add</button>
+    </div>
+    <div fxFlexAlign="center">
+      <mat-checkbox formControlName="allEmployees" [disabled]="!isProjectSelected">Get feedback for all employees</mat-checkbox>
     </div>
   </div>
 

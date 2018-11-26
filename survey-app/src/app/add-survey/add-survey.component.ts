@@ -26,7 +26,8 @@ export class AddSurveyComponent implements OnInit {
   	recipientFirstName: new FormControl({value: '', disabled: true}, Validators.required),
   	recipientLastName: new FormControl({value: '', disabled: true}, Validators.required),
   	recipientEmail: new FormControl({value: '', disabled: true}, [Validators.required, Validators.email]),
-    requestFeedback: new FormControl({value: false, disabled: true})
+    requestFeedback: new FormControl({value: false, disabled: true}),
+    allEmployees: new FormControl({value: false, disabled: true})
   });
 
   displayedColumns: string[] = ["question", "options", "action"];
@@ -37,6 +38,7 @@ export class AddSurveyComponent implements OnInit {
   employees = [];
   isClientSelected = false;
   isProjectSelected = false;
+  isAllEmployeesChecked = false;
   selectedProject = null;
   selectedEmployee = null;
   questionCounter:number = 1;
@@ -82,6 +84,9 @@ export class AddSurveyComponent implements OnInit {
 
     this.surveyForm.get('requestFeedback').valueChanges
       .subscribe(val => this.requestFeedbackChanged(val));
+
+    this.surveyForm.get('allEmployees').valueChanges
+      .subscribe(val => this.allEmployeesChanged(val));
   }
 
   clientChanged(val): void {
@@ -143,6 +148,23 @@ export class AddSurveyComponent implements OnInit {
     }
     this.dataSource.data = this.questions;
     this.showNoQuestionError = false;
+  }
+
+  allEmployeesChanged(val): void {
+    if (val) {
+      this.isAllEmployeesChecked = true;
+      this.employees.forEach(employee => {
+        this.createEmployeeQuestion(employee, false);
+      });      
+    } else {
+      this.isAllEmployeesChecked = false;
+      // remove all employee ratings
+      var filteredQuestions = this.questions
+                                  .filter(question => question.questionType != "Employee_Rating");
+      this.questions = filteredQuestions;
+      this.dataSource.data = this.questions; 
+    }
+
   }
 
   getSurveyToEdit(surveyId): void {
@@ -282,6 +304,10 @@ export class AddSurveyComponent implements OnInit {
 
   addEmployeeQuestion(): void {
     var employee = this.employees.find(empl => empl.id === this.selectedEmployee);
+    this.createEmployeeQuestion(employee, true);
+  }
+
+  createEmployeeQuestion(employee, showSnackBar){
     // check if there is a question for this employee
     if (!this.haveQuestionForEmployee(employee.id)) {
       var questionId = this.questionCounter++
@@ -292,7 +318,7 @@ export class AddSurveyComponent implements OnInit {
       question.questionType = "Employee_Rating";
       this.questions.push(question);
       this.dataSource.data = this.questions;
-    } else {
+    } else if (showSnackBar) {
       let snackBarRef = this.snackBar.open("Question already added!", "ok", {duration: 2000});
     }
     this.selectedEmployee = null;

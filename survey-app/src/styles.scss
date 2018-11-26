@@ -6,3 +6,19 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .container {
 	margin: 10px;
 }
+
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.action-link {
+	padding-right: 5px;
+}
+
+.mat-column-action {
+  width: 150px;
+}

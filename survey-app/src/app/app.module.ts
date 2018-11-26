@@ -18,6 +18,9 @@ import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { AddSurveyComponent, AddQuestionDialog } from './add-survey/add-survey.component';
 import { ViewSurveyComponent } from './view-survey/view-survey.component';
 import { PreviewSurveyComponent } from './preview-survey/preview-survey.component';
+import { AddClientComponent } from './add-client/add-client.component';
+import { AddProjectComponent } from './add-project/add-project.component';
+import { AddEmployeeComponent } from './add-employee/add-employee.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +34,10 @@ import { PreviewSurveyComponent } from './preview-survey/preview-survey.componen
     AddSurveyComponent,
     AddQuestionDialog,
     ViewSurveyComponent,
-    PreviewSurveyComponent
+    PreviewSurveyComponent,
+    AddClientComponent,
+    AddProjectComponent,
+    AddEmployeeComponent
   ],
   imports: [
     BrowserModule,

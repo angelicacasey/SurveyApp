@@ -56,10 +56,13 @@ export class AddEmployeeComponent implements OnInit {
   		}
   		this.employee.firstName = this.employeeForm.value.firstName;
   		this.employee.lastName = this.employeeForm.value.lastName;
+      this.employee.itemName = this.employee.firstName + " " + this.employee.lastName;
 
-  		this.surveyService.saveEmployee(this.employee);
-
-  		this.router.navigate(['/employees']);
+  		this.surveyService.saveEmployee(this.employee).subscribe(result => {
+        console.log("Save employee result ", result);
+        this.router.navigate(['/employees']);
+      });
+  		
   	}
   }
 

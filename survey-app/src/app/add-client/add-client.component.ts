@@ -65,9 +65,10 @@ export class AddClientComponent implements OnInit {
   	  } 
   	  this.client.itemName = this.clientForm.value.clientName;
   	  this.client.description = this.clientForm.value.description;
-  	  this.surveyService.saveClient(this.client);
-
-  	  this.router.navigate(['/clients']); 		
+  	  this.surveyService.saveClient(this.client).subscribe(result => {
+        console.log("Save result: ", result);
+        this.router.navigate(['/clients']);
+      });
   	}
 
   }

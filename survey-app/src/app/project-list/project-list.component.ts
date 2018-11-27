@@ -37,4 +37,9 @@ export class ProjectListComponent implements OnInit {
   	console.log("Edit project: ", project.id + ": " + project.itemName);
   	this.router.navigate(['/projects/edit/' + project.id]);
   }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
 }

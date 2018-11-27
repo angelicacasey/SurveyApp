@@ -47,8 +47,13 @@ export class AddProjectComponent implements OnInit {
       this.getProjectToEdit(id);
     } else {
       console.log("Adding project");
-      this.title = "Add Project"
+      this.title = "Add Project";
+      this.getSupportingData();
     }
+
+  }
+
+  getSupportingData(): void {
     this.getListOfClients();
     this.getListOfEmployee();
   }
@@ -64,6 +69,8 @@ export class AddProjectComponent implements OnInit {
   		this.projectForm.get('pmFirstName').setValue(this.project.programManager.firstName);
    		this.projectForm.get('pmLastName').setValue(this.project.programManager.lastName);
   		this.projectForm.get('pmEmail').setValue(this.project.programManager.email);
+
+      this.getSupportingData();
   	});
 
   }
@@ -102,6 +109,7 @@ export class AddProjectComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log("submitt called for project");
   	if (!this.project) {
   	  this.project = new Project();
   	  this.project.contact = new Person();
@@ -119,9 +127,11 @@ export class AddProjectComponent implements OnInit {
   	this.project.programManager.email = this.projectForm.value.pmEmail;
   	this.project.employees = this.selectedEmployees;
 
-  	this.surveyService.saveProject(this.project);
+  	this.surveyService.saveProject(this.project).subscribe(result => {
+      console.log("save project result: ", result);
+      this.router.navigate(['/projects']);
+    });
 
-  	this.router.navigate(['/projects']);
   }
 
   getProjectNameError(): string {

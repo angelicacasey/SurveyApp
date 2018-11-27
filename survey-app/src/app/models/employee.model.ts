@@ -1,6 +1,8 @@
 export class Employee {
-	"id": string;
-	"itemName": string;
-	"firstName": string;
-	"lastName": string;
+	id: string;
+	itemName: string;
+	dataType: string
+	associatedId: string;
+	firstName: string;
+	lastName: string;
 }

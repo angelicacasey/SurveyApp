@@ -4,6 +4,8 @@ import { Question } from './question.model';
 export class Survey { 
 	id: string;
 	itemName: string;
+	dataType: string
+	associatedId: string;
 	projectId: string;
 	projectName: string;
 	clientId: string;

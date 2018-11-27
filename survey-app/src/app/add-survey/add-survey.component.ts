@@ -41,7 +41,6 @@ export class AddSurveyComponent implements OnInit {
   isAllEmployeesChecked = false;
   selectedProject = null;
   selectedEmployee = null;
-  questionCounter:number = 1;
   showNoQuestionError: boolean = false;
   survey: Survey;
   inEditMode: boolean = false;
@@ -107,7 +106,7 @@ export class AddSurveyComponent implements OnInit {
 
       this.surveyForm.get('recipientChoice').setValue("1"); 
 
-      this.getEmployees(val);
+      this.getEmployees(projectData.employees);
       this.isProjectSelected = true;
     }
   }
@@ -134,10 +133,8 @@ export class AddSurveyComponent implements OnInit {
   requestFeedbackChanged(val): void {
     console.log("requestFeedback changed, val=", val);
     if (val) {
-      var questionId = this.questionCounter++
       // add question
       var question = new Question();
-      question.id = ""+questionId;
       question.question = "Please provide a rating of how MedAcuity is doing overall.";
       question.questionType = "Medacuity_Rating";
       this.questions.push(question);
@@ -207,7 +204,7 @@ export class AddSurveyComponent implements OnInit {
         this.surveyForm.get('requestFeedback').setValue(true);
       }
 
-      this.getEmployees(this.selectedProject.id);
+      this.getEmployees(this.selectedProject.employees);
 
     });
   }
@@ -246,8 +243,11 @@ export class AddSurveyComponent implements OnInit {
       // save questions
       this.survey.questions = this.questions;
       console.log("New survey:", this.survey);
-      var savedSurvey = this.surveyService.saveSurvey(this.survey);
-      this.router.navigate(['/surveys/preview/'+ savedSurvey.id])
+      this.surveyService.saveSurvey(this.survey).subscribe(result => {
+        var savedSurvey = result;
+        this.router.navigate(['/surveys/preview/'+ savedSurvey.id])
+      });
+      
     }
   }
 
@@ -310,9 +310,7 @@ export class AddSurveyComponent implements OnInit {
   createEmployeeQuestion(employee, showSnackBar){
     // check if there is a question for this employee
     if (!this.haveQuestionForEmployee(employee.id)) {
-      var questionId = this.questionCounter++
       var question = new Question();
-      question.id = ""+questionId;
       question.question = "Please provide a performance rating for " + employee.itemName + ".";
       question.employeeId = employee.id;
       question.questionType = "Employee_Rating";
@@ -346,7 +344,6 @@ export class AddSurveyComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed ', result);
       if (result) {
-        result.id = ""+this.questionCounter++;
         this.questions.push(result);
         this.dataSource.data = this.questions;
         this.showNoQuestionError = false;
@@ -355,7 +352,7 @@ export class AddSurveyComponent implements OnInit {
   }
 
   deleteQuestion(question): void {
-    let index = this.questions.findIndex(ques => ques.id === question.id);
+    let index = this.questions.findIndex(ques => ques.question === question.question);
     if (this.questions[index].questionType === "Medacuity_Rating") {
       this.surveyForm.get('requestFeedback').setValue(false);
     } else {
@@ -395,8 +392,8 @@ export class AddSurveyComponent implements OnInit {
       });
   }
 
-  getEmployees(projectId): void {
-    this.surveyService.getListOfEmployeesOnProject(projectId)
+  getEmployees(employeeIdLst): void {
+    this.surveyService.getEmployeesByList(employeeIdLst)
       .subscribe(result => {
         this.employees = result;
       });

@@ -5,5 +5,6 @@ export class Question {
 	employeeId: string;
 	options: string[];
 	rating: number;
-	response: string
+	response: string;
+	deleted: boolean = false;
 }

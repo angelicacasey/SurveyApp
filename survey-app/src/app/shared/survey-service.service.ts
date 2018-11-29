@@ -245,6 +245,7 @@ export class SurveyService {
   projectUrl = this.baseUrl + "/project";
   projectByClientUrl = this.baseUrl + "/project/byClient/";
   surveyUrl = this.baseUrl + "/survey";
+  surveySendUrl = this.baseUrl + "/survey/send/";
 
   constructor(private httpClient:HttpClient) { 
   	this.getMockSurveyForm();
@@ -418,9 +419,11 @@ export class SurveyService {
   }
 
 
-  sendSurvey(survey: Survey): void {
-  	var survey = this.currentSurveys.find(s => s.id === survey.id);
-  	survey.status = "Sent";
+  sendSurvey(survey: Survey): Observable<Survey> {
+  	return this.httpClient.post<Survey>(this.surveySendUrl + survey.id, survey)
+        .pipe(
+          catchError(this.handleError)
+        );
   }
 
 

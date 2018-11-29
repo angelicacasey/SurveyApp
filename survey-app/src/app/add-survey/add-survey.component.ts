@@ -66,9 +66,8 @@ export class AddSurveyComponent implements OnInit {
       console.log("Adding survey");
       this.title = "Add Survey"
       this.getListOfClients();
+      this.onChanges();
     }
-
-    this.onChanges();
   }
 
   onChanges(): void {
@@ -197,13 +196,15 @@ export class AddSurveyComponent implements OnInit {
 
       this.isProjectSelected = true;
 
-      this.questions = this.survey.questions;
+      // make a copy of the survey's question array
+      this.survey.questions.forEach(ques => this.questions.push(ques));
       this.dataSource.data = this.questions;
       var haveMedAcuityQuestion = this.questions.find(q => q.questionType === "Medacuity_Rating");
       if (haveMedAcuityQuestion) {
         this.surveyForm.get('requestFeedback').setValue(true);
       }
 
+      this.onChanges();
       this.getEmployees(this.selectedProject.employees);
 
     });
@@ -220,6 +221,7 @@ export class AddSurveyComponent implements OnInit {
         this.survey = new Survey();
       }
       this.survey.itemName = this.surveyForm.value.surveyName;
+      this.survey.numTimesSent = 0;
       var project = this.selectedProject;
 
       if (!this.inEditMode) {
@@ -229,6 +231,11 @@ export class AddSurveyComponent implements OnInit {
         var client = this.clients.find(c => c.id === this.survey.clientId);
         this.survey.clientName = client.itemName;
         this.survey.createdBy = this.selectedProject.programManager;
+        // save questions
+        this.survey.questions = this.questions;
+      } else {
+        // update the question array with any deleted questions
+        this.survey.questions = this.updateSurveyQuestions(this.survey.questions, this.questions);
       }
 
       if (this.surveyForm.value.recipientChoice == "1") {
@@ -240,15 +247,30 @@ export class AddSurveyComponent implements OnInit {
         this.survey.recipient.email = this.surveyForm.value.recipientEmail;
       }
       this.survey.status = "Draft";
-      // save questions
-      this.survey.questions = this.questions;
+
       console.log("New survey:", this.survey);
       this.surveyService.saveSurvey(this.survey).subscribe(result => {
         var savedSurvey = result;
         this.router.navigate(['/surveys/preview/'+ savedSurvey.id])
       });
-      
     }
+  }
+
+  updateSurveyQuestions(surveyQuestions, questions): Question[] {
+    var updatedQuestions = questions;
+    // need to determine if any questions have been deleted.  If so
+    // need to add this to the list of questions with the delete flag set to false.
+    surveyQuestions.forEach(surveyQuestion => {
+      // find the question in the list of questions
+      var foundQuestion = questions.find(q=> q.id == surveyQuestion.id);
+      if (!foundQuestion) {
+        // if not found, then it was deleted.
+        surveyQuestion.deleted = true;
+        updatedQuestions.push(surveyQuestion);
+      }
+    });
+
+    return updatedQuestions;
   }
 
   onClear(): void {

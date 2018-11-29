@@ -44,8 +44,12 @@ export class PreviewSurveyComponent implements OnInit {
 
   sendSurvey(): void {
   	// call service to send survey
-  	// go back to list
-  	this.router.navigate(['/surveys']);
+    this.surveyService.sendSurvey(this.survey).subscribe(result => {
+      console.log("send survey result: ", result);
+      // go back to list
+      this.router.navigate(['/surveys']);
+    });
+  	
   }
 
   goBack(): void {
